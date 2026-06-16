@@ -233,7 +233,8 @@ input[type=file]{display:none;}
 body{background-image:none;}
 .title{font-weight:700;letter-spacing:-.3px;}
 .scard,.card{box-shadow:var(--shadow);border:1px solid var(--line);}
-.feat{box-shadow:none;border:1px solid var(--line);}
+.feat{box-shadow:none;border:1px solid var(--line);cursor:pointer;transition:transform .15s,background .15s;}
+.feat:active{transform:scale(.96);background:#efece6;}
 .shoot-card{background:linear-gradient(150deg,#8b9a7c,#6c7b5f);box-shadow:0 8px 24px rgba(95,105,80,.22);}
 .shoot-card .ico{background:rgba(255,255,255,.15);}
 .note,.field input,.field select,.quickadd input,.sheet input,.seg button.on,.cal .ring i,.remindrow select{background:#fbfaf6;}
@@ -562,6 +563,7 @@ const MEAL_SCHEMA={type:"OBJECT",properties:{
 
 let imgB64=null,imgMime="image/jpeg";
 $("shootCard").onclick=()=>$("fileInput").click();
+document.querySelectorAll('.feat').forEach(f=>f.onclick=()=>$("fileInput").click());
 $("fileInput").onchange=e=>{ if(e.target.files[0]) loadPick(e.target.files[0]); };
 function compress(file,cb){
   const reader=new FileReader();
