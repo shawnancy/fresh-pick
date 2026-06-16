@@ -9,17 +9,18 @@
 <title>鲜知 · 挑菜健康助手</title>
 <style>
 :root{
-  --bg:#f2f2f7;
-  --glass:#ffffff;
-  --glass-strong:#ffffff;
-  --ink:#1c1c1e; --ink2:#6e6e73; --ink3:#a1a1a8;
-  --line:rgba(60,60,67,.10);
-  --green:#30d158; --green-d:#248a3d;
-  --blue:#007aff; --orange:#ff9500; --red:#ff3b30; --purple:#bf5af2;
-  --pink:#ff2d55; --cyan:#32ade6; --indigo:#5e5ce6; --water:#32ade6;
-  --shadow:0 1px 2px rgba(0,0,0,.04), 0 8px 22px rgba(0,0,0,.05);
-  --shadow-lg:0 12px 40px rgba(0,0,0,.10);
-  --r:22px;
+  --bg:#eceae5;
+  --card:#f5f3ee;
+  --glass:#f5f3ee;
+  --glass-strong:#f5f3ee;
+  --ink:#3a3a38; --ink2:#76726b; --ink3:#a8a299;
+  --line:rgba(58,55,50,.12);
+  --green:#7c8b6f; --green-d:#5f6e54;
+  --blue:#8b9da7; --orange:#bfa06a; --red:#b5817a; --purple:#a396a6;
+  --pink:#c19a9a; --cyan:#8fa0a8; --indigo:#9b95a3; --water:#8b9da7; --clay:#b08d5c;
+  --shadow:0 1px 2px rgba(60,55,50,.05);
+  --shadow-lg:0 6px 20px rgba(60,55,50,.08);
+  --r:18px;
   --safe-b:env(safe-area-inset-bottom,0px);
   --safe-t:env(safe-area-inset-top,0px);
 }
@@ -225,8 +226,57 @@ input[type=file]{display:none;}
 @keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
 @keyframes fade{from{opacity:0;}to{opacity:1;}}
 @keyframes slideup{from{transform:translateY(100%);}to{transform:none;}}
-.toast{position:fixed;left:50%;bottom:calc(100px + var(--safe-b));transform:translateX(-50%) translateY(20px);background:rgba(0,0,0,.86);color:#fff;padding:11px 20px;border-radius:14px;font-size:14px;font-weight:600;z-index:200;opacity:0;transition:.3s;pointer-events:none;max-width:88%;text-align:center;}
+.toast{position:fixed;left:50%;bottom:calc(100px + var(--safe-b));transform:translateX(-50%) translateY(20px);background:rgba(48,46,42,.92);color:#f5f3ee;padding:11px 20px;border-radius:14px;font-size:14px;font-weight:600;z-index:200;opacity:0;transition:.3s;pointer-events:none;max-width:88%;text-align:center;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ===== 莫兰迪低饱和 · 高级配色 override ===== */
+body{background-image:none;}
+.title{font-weight:700;letter-spacing:-.3px;}
+.scard,.card{box-shadow:var(--shadow);border:1px solid var(--line);}
+.feat{box-shadow:none;border:1px solid var(--line);}
+.shoot-card{background:linear-gradient(150deg,#8b9a7c,#6c7b5f);box-shadow:0 8px 24px rgba(95,105,80,.22);}
+.shoot-card .ico{background:rgba(255,255,255,.15);}
+.note,.field input,.field select,.quickadd input,.sheet input,.seg button.on,.cal .ring i,.remindrow select{background:#fbfaf6;}
+.field input,.field select,.quickadd input,.remindrow select{border:1px solid var(--line);}
+.calring .in{background:var(--card);}
+/* 标尺 / 图表 */
+.bmibar{background:linear-gradient(to right,#8fa0a8 0%,#7c8b6f 30%,#bfa06a 60%,#c39a86 80%,#b5817a 100%);}
+.bmimark{background:#3a3a38;}
+.chart7 .bar{background:linear-gradient(to top,#7c8b6f,#a6b291);}
+.chart7 .bar.over{background:linear-gradient(to top,#b5817a,#cda79c);}
+.chart7 .bar.today{box-shadow:0 0 0 2px rgba(124,139,111,.35);}
+.goalline{border-top-color:rgba(181,129,122,.5);} .goalline span{color:var(--red);}
+.loading .ring{border-color:rgba(124,139,111,.2);border-top-color:var(--green);}
+.dietload .ring{border-color:rgba(193,154,154,.25);border-top-color:var(--pink);}
+/* tint 卡块 */
+.bestpick{background:#ebeee4;border-color:rgba(124,139,111,.28);box-shadow:var(--shadow-lg);}
+.bestpick .crown{color:var(--green-d);} .bestpick .crown .badge{background:var(--green);color:#f5f3ee;}
+.tips{background:#e9edee;border-color:rgba(139,157,167,.32);color:#41525c;}
+.tips .h{color:#5f7280;}
+.cal{background:#f0ebe2;} .cal .meta .big{color:var(--ink);} .cal .ring i{color:var(--clay);}
+.cal .ring{background:conic-gradient(var(--clay) var(--p,40%),rgba(176,141,92,.18) 0);}
+.foodrow .ic{background:rgba(176,141,92,.18);}
+.foodrow .fk,.dietmeal .dk{color:var(--clay);}
+.mealres{background:#ebeee4;border-color:rgba(124,139,111,.28);}
+.dietsum{background:rgba(193,154,154,.16);color:#8a6a6a;}
+.dietmeal .slot{color:#a98686;}
+.minibtn{background:rgba(124,139,111,.16);color:var(--green-d);}
+.minibtn.dark{background:#3a3a38;color:#f5f3ee;}
+.minibtn.blue{background:rgba(139,157,167,.18);color:#5f7280;}
+.addbtn{background:var(--green);}
+.errbox{background:rgba(181,129,122,.12);border-color:rgba(181,129,122,.3);color:#8f5b53;}
+.keystate.ok{background:rgba(124,139,111,.16);color:var(--green-d);}
+.keystate.no{background:rgba(191,160,106,.18);color:#8a6f3a;}
+.water .dot{background:rgba(139,157,167,.16);} .water .dot.full{background:#8b9da7;}
+.wbtns button{background:rgba(139,157,167,.16);color:#5f7280;}
+.btn-go{background:#3a3a38;box-shadow:0 8px 20px rgba(58,55,50,.22);}
+.sheet .save{box-shadow:0 8px 20px rgba(124,139,111,.26);}
+.tabbar{background:rgba(245,243,238,.86);}
+/* 喝水提醒 */
+.remindrow{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);}
+.remindrow .rl-lab{font-size:15px;font-weight:500;color:var(--ink);}
+.remindrow select{border-radius:11px;padding:9px 11px;font-size:14px;font-family:inherit;color:var(--ink);}
+.remindhint{font-size:12.5px;color:var(--ink3);margin-top:9px;line-height:1.55;}
 </style>
 </head>
 <body>
@@ -297,19 +347,7 @@ input[type=file]{display:none;}
 
   <!-- ============ 健康 ============ -->
   <section class="view" id="view-health">
-    <div class="hero"><div class="eyebrow"><span class="dot"></span>健康档案</div><div class="title">我的身体</div><div class="subtitle">算出适合你的每日热量</div></div>
-    <div class="scard">
-      <div class="ch"><span class="chl"><span class="chip" style="background:var(--indigo)">👤</span>基本资料</span></div>
-      <div class="field"><label>性别</label><div class="seg" style="width:140px" id="genderSeg">
-        <button data-g="female">女</button><button data-g="male">男</button></div></div>
-      <div class="field"><label>年龄</label><div class="ctrl"><input id="pAge" type="number" inputmode="numeric"><span class="unit">岁</span></div></div>
-      <div class="field"><label>身高</label><div class="ctrl"><input id="pHeight" type="number" inputmode="numeric"><span class="unit">cm</span></div></div>
-      <div class="field"><label>体重</label><div class="ctrl"><input id="pWeight" type="number" inputmode="decimal"><span class="unit">kg</span></div></div>
-      <div class="field"><label>目标体重</label><div class="ctrl"><input id="pGoalW" type="number" inputmode="decimal"><span class="unit">kg</span></div></div>
-      <div class="field"><label>活动量</label><div class="ctrl"><select id="pAct">
-        <option value="1.2">久坐少动</option><option value="1.375">轻度活动</option>
-        <option value="1.55">中等活动</option><option value="1.725">经常运动</option></select></div></div>
-    </div>
+    <div class="hero"><div class="eyebrow"><span class="dot"></span>健康档案</div><div class="title">我的身体</div><div class="subtitle">身体资料在「我的」里填</div></div>
     <div class="scard">
       <div class="ch"><span class="chl"><span class="chip" style="background:var(--green)">⚖️</span>身体质量指数 BMI</span></div>
       <div class="metricgrid">
@@ -326,6 +364,9 @@ input[type=file]{display:none;}
         <div class="wbtns"><button id="waterMinus">−</button><button id="waterPlus">＋</button></div>
       </div>
       <div class="dots" id="waterDots" style="margin-top:14px"></div>
+      <div class="remindrow"><span class="rl-lab">⏰ 喝水提醒</span>
+        <select id="remindSel"><option value="0">关闭</option><option value="60">每 1 小时</option><option value="90">每 1.5 小时</option><option value="120">每 2 小时</option></select></div>
+      <div class="remindhint" id="remindHint"></div>
     </div>
     <div class="scard">
       <div class="ch"><span class="chl"><span class="chip" style="background:var(--orange)">🔥</span>推荐每日热量</span></div>
@@ -345,6 +386,18 @@ input[type=file]{display:none;}
   <!-- ============ 我的 ============ -->
   <section class="view" id="view-me">
     <div class="hero"><div class="eyebrow"><span class="dot"></span>设置</div><div class="title">我的</div><div class="subtitle">鲜知 · 你的口袋健康助手</div></div>
+    <div class="scard">
+      <div class="ch"><span class="chl"><span class="chip" style="background:var(--indigo)">👤</span>基本资料</span></div>
+      <div class="field"><label>性别</label><div class="seg" style="width:140px" id="genderSeg">
+        <button data-g="female">女</button><button data-g="male">男</button></div></div>
+      <div class="field"><label>年龄</label><div class="ctrl"><input id="pAge" type="number" inputmode="numeric"><span class="unit">岁</span></div></div>
+      <div class="field"><label>身高</label><div class="ctrl"><input id="pHeight" type="number" inputmode="numeric"><span class="unit">cm</span></div></div>
+      <div class="field"><label>体重</label><div class="ctrl"><input id="pWeight" type="number" inputmode="decimal"><span class="unit">kg</span></div></div>
+      <div class="field"><label>目标体重</label><div class="ctrl"><input id="pGoalW" type="number" inputmode="decimal"><span class="unit">kg</span></div></div>
+      <div class="field"><label>活动量</label><div class="ctrl"><select id="pAct">
+        <option value="1.2">久坐少动</option><option value="1.375">轻度活动</option>
+        <option value="1.55">中等活动</option><option value="1.725">经常运动</option></select></div></div>
+    </div>
     <div class="scard melist">
       <div class="ch"><span class="chl"><span class="chip" style="background:var(--blue)">🧠</span>AI 连接</span></div>
       <div class="field" id="meKey"><label>识别大脑 (Gemini Key)</label><div class="ctrl"><span id="meKeyState" style="font-size:13px;color:var(--ink3)">未连接</span><span class="ar">›</span></div></div>
@@ -429,6 +482,7 @@ function switchTab(name){
   window.scrollTo({top:0,behavior:'instant'});
   if(name==='nutri') renderNutri();
   if(name==='health') renderHealth();
+  if(name==='me') renderMe();
 }
 document.querySelectorAll('.tab').forEach(t=> t.onclick=()=>switchTab(t.dataset.view));
 
@@ -677,11 +731,14 @@ function saveProfileFromInputs(){
   p.activity=parseFloat($("pAct").value)||p.activity;
   SS('fresh_profile',p); computeHealth();
 }
-function renderHealth(){
+function syncProfileInputs(){
   const p=getProfile();
   $("pAge").value=p.age; $("pHeight").value=p.height; $("pWeight").value=p.weight; $("pGoalW").value=p.goalWeight; $("pAct").value=p.activity;
   document.querySelectorAll('#genderSeg button').forEach(b=>b.classList.toggle('on',b.dataset.g===p.gender));
-  computeHealth(); renderWeightChart(); renderWater();
+}
+function renderMe(){ syncProfileInputs(); refreshKeyState(); }
+function renderHealth(){
+  computeHealth(); renderWeightChart(); renderWater(); applyReminder();
 }
 function computeHealth(){
   const p=getProfile();
@@ -721,9 +778,9 @@ function renderWeightChart(){
   const pts=arr.map((w,i)=>{ const x=pad+i*(W-2*pad)/(arr.length-1); const y=H-pad-((w.kg-mn)/rng)*(H-2*pad); return [x,y]; });
   const line=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
   const area=line+` L${pts[pts.length-1][0].toFixed(1)} ${H-pad} L${pts[0][0].toFixed(1)} ${H-pad} Z`;
-  const dots=pts.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.2" fill="#34c759"/>`).join('');
-  svg.innerHTML=`<defs><linearGradient id="wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(52,199,89,.28)"/><stop offset="1" stop-color="rgba(52,199,89,0)"/></linearGradient></defs>
-    <path d="${area}" fill="url(#wg)"/><path d="${line}" fill="none" stroke="#34c759" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>${dots}
+  const dots=pts.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.2" fill="#7c8b6f"/>`).join('');
+  svg.innerHTML=`<defs><linearGradient id="wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(124,139,111,.26)"/><stop offset="1" stop-color="rgba(124,139,111,0)"/></linearGradient></defs>
+    <path d="${area}" fill="url(#wg)"/><path d="${line}" fill="none" stroke="#7c8b6f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>${dots}
     <text x="${pad}" y="12" font-size="10" fill="#9a9aa0">${mx.toFixed(1)}kg</text><text x="${pad}" y="${H-2}" font-size="10" fill="#9a9aa0">${mn.toFixed(1)}kg</text>`;
 }
 
@@ -737,8 +794,44 @@ function renderWater(){
   for(let i=0;i<Math.max(target,c);i++) dots+=`<div class="dot ${i<c?'full':''}">${i<c?'💧':''}</div>`;
   $("waterDots").innerHTML=dots;
 }
-$("waterPlus").onclick=()=>{ setWater(getWater()+1); if(getWater()===8) toast("达标啦 💧 2L 喝够了"); };
+$("waterPlus").onclick=()=>{ setWater(getWater()+1); markDrink(); if(getWater()===8) toast("达标啦 💧 2L 喝够了"); };
 $("waterMinus").onclick=()=>setWater(getWater()-1);
+
+/* 喝水提醒 (前台/已添加到主屏的App打开时生效) */
+function getRemind(){ return LS('fresh_water_remind',0); }   // 间隔分钟, 0=关
+function getLastDrink(){ return LS('fresh_water_last', Date.now()); }
+function markDrink(){ SS('fresh_water_last', Date.now()); if(getRemind()) updateRemindHint(); }
+let waterTimer=null;
+function applyReminder(){
+  const mins=getRemind();
+  if($("remindSel")) $("remindSel").value=mins;
+  clearInterval(waterTimer);
+  if(!mins){ if($("remindHint")) $("remindHint").textContent="关闭中 · 开启后到点会弹提醒"; return; }
+  updateRemindHint();
+  waterTimer=setInterval(()=>{
+    if(Date.now()-getLastDrink() >= mins*60000){ notifyDrink(); SS('fresh_water_last', Date.now()); }
+    updateRemindHint();
+  }, 30000);
+}
+function updateRemindHint(){
+  const mins=getRemind(); if(!mins||!$("remindHint")) return;
+  const d=new Date(getLastDrink()+mins*60000);
+  $("remindHint").innerHTML="下次提醒约 <b>"+pad(d.getHours())+":"+pad(d.getMinutes())+"</b> · 喝一杯就顺延<br><span style='color:var(--ink3)'>提醒在网页/已加到主屏的App打开时生效</span>";
+}
+function notifyDrink(){
+  toast("💧 该喝水啦，去倒一杯");
+  if("Notification" in window && Notification.permission==="granted"){
+    try{ new Notification("💧 鲜知 · 喝水提醒",{body:"该喝水啦，给身体补点水分～"}); }catch(e){}
+  }
+}
+if($("remindSel")) $("remindSel").onchange=()=>{
+  const v=parseInt($("remindSel").value,10)||0;
+  SS('fresh_water_remind',v);
+  if(v && "Notification" in window && Notification.permission==="default"){ Notification.requestPermission(); }
+  if(v) SS('fresh_water_last', Date.now());
+  applyReminder();
+  toast(v?("已开启 · 每"+(v%60?(v/60).toFixed(1):v/60)+"小时提醒"):"已关闭喝水提醒");
+};
 
 /* ============================================================
    我的：数据管理
@@ -762,7 +855,7 @@ function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;",
 function toast(msg){ const t=$("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("show"),2200); }
 
 /* ===== 启动 ===== */
-window.addEventListener("load",()=>{ refreshKeyState(); if(!getKey()) setTimeout(openKeySheet,500); });
+window.addEventListener("load",()=>{ refreshKeyState(); applyReminder(); if(!getKey()) setTimeout(openKeySheet,500); });
 </script>
 </body>
 </html>
