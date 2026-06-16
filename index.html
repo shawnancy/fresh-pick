@@ -12,12 +12,10 @@
   --bg:#f2f3f7;
   --glass:rgba(255,255,255,.72);
   --glass-strong:rgba(255,255,255,.92);
-  --ink:#1d1d1f;
-  --ink2:#6e6e73;
-  --ink3:#9a9aa0;
+  --ink:#1d1d1f; --ink2:#6e6e73; --ink3:#9a9aa0;
   --line:rgba(0,0,0,.06);
   --green:#34c759; --green-d:#28a745;
-  --blue:#0a84ff; --orange:#ff9f0a; --red:#ff453a;
+  --blue:#0a84ff; --orange:#ff9f0a; --red:#ff453a; --purple:#bf5af2;
   --shadow:0 8px 30px rgba(0,0,0,.08);
   --shadow-lg:0 20px 50px rgba(0,0,0,.14);
   --r:22px;
@@ -25,227 +23,342 @@
   --safe-t:env(safe-area-inset-top,0px);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;}
-html,body{margin:0;padding:0;height:100%;}
+html,body{margin:0;padding:0;min-height:100%;}
 body{
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","PingFang SC","Helvetica Neue",sans-serif;
-  color:var(--ink);
-  background:var(--bg);
+  color:var(--ink); background:var(--bg);
   background-image:
     radial-gradient(110% 80% at 15% 0%, rgba(52,199,89,.12), transparent 55%),
     radial-gradient(90% 70% at 95% 8%, rgba(10,132,255,.10), transparent 50%),
     radial-gradient(80% 60% at 50% 100%, rgba(255,159,10,.08), transparent 60%);
-  background-attachment:fixed;
-  -webkit-font-smoothing:antialiased;
-  overscroll-behavior-y:none;
+  background-attachment:fixed; -webkit-font-smoothing:antialiased; overscroll-behavior-y:none;
 }
-.app{max-width:600px;margin:0 auto;min-height:100%;padding:0 0 calc(86px + var(--safe-b));}
+.app{max-width:600px;margin:0 auto;min-height:100vh;padding:0 0 calc(90px + var(--safe-b));}
+.view{display:none;}
+.view.on{display:block;animation:fade .3s;}
 
-/* ---------- 顶部大标题 ---------- */
-.hero{padding:calc(20px + var(--safe-t)) 22px 6px;}
+/* 顶部大标题 */
+.hero{padding:calc(20px + var(--safe-t)) 22px 4px;position:relative;}
 .eyebrow{font-size:13px;font-weight:600;color:var(--green-d);letter-spacing:.4px;display:flex;align-items:center;gap:6px;}
 .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(52,199,89,.18);}
-.title{font-size:34px;font-weight:800;letter-spacing:-.5px;margin:7px 0 2px;line-height:1.1;}
+.title{font-size:33px;font-weight:800;letter-spacing:-.5px;margin:7px 0 2px;line-height:1.1;}
 .subtitle{font-size:15px;color:var(--ink2);margin-bottom:4px;}
 .gear{position:absolute;top:calc(22px + var(--safe-t));right:22px;width:38px;height:38px;border-radius:50%;
   background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border:.5px solid var(--line);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;box-shadow:var(--shadow);}
+  border:.5px solid var(--line);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;box-shadow:var(--shadow);z-index:5;}
 .gear:active{transform:scale(.92);}
 
-/* ---------- 拍照主卡 ---------- */
+/* 通用卡片 / 控件 */
+.scard{background:var(--glass-strong);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:.5px solid var(--line);border-radius:22px;padding:18px;margin:16px 16px 0;box-shadow:var(--shadow);}
+.scard .ch{font-size:13px;font-weight:700;color:var(--ink3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
+.minibtn{border:none;background:rgba(52,199,89,.14);color:var(--green-d);font-weight:700;font-size:13px;padding:7px 13px;border-radius:999px;cursor:pointer;font-family:inherit;}
+.minibtn:active{transform:scale(.95);}
+.minibtn.dark{background:var(--ink);color:#fff;}
+.minibtn.blue{background:rgba(10,132,255,.14);color:var(--blue);}
+
+/* ---------- 挑选 ---------- */
 .shoot-card{margin:16px 16px 0;border-radius:28px;padding:30px 24px 28px;
   background:linear-gradient(160deg,rgba(52,199,89,.95),rgba(40,167,69,.95));
-  box-shadow:0 18px 44px rgba(40,167,69,.32);position:relative;overflow:hidden;cursor:pointer;
-  transition:transform .25s cubic-bezier(.2,.8,.2,1);}
+  box-shadow:0 18px 44px rgba(40,167,69,.32);position:relative;overflow:hidden;cursor:pointer;transition:transform .25s cubic-bezier(.2,.8,.2,1);}
 .shoot-card:active{transform:scale(.985);}
 .shoot-card::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 80% -10%,rgba(255,255,255,.35),transparent 50%);}
-.shoot-card .ico{width:64px;height:64px;border-radius:20px;background:rgba(255,255,255,.22);
-  backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:16px;position:relative;z-index:1;}
+.shoot-card .ico{width:64px;height:64px;border-radius:20px;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:16px;position:relative;z-index:1;}
 .shoot-card h2{color:#fff;font-size:22px;font-weight:800;margin:0 0 4px;position:relative;z-index:1;letter-spacing:-.3px;}
 .shoot-card p{color:rgba(255,255,255,.9);font-size:14px;margin:0;position:relative;z-index:1;}
 .shoot-card .arrow{position:absolute;right:24px;bottom:26px;color:#fff;font-size:22px;z-index:1;opacity:.9;}
 .albumlink{display:block;text-align:center;color:var(--ink2);font-size:14px;margin:14px 0 2px;font-weight:500;}
 .albumlink b{color:var(--green-d);}
 input[type=file]{display:none;}
-
-/* ---------- 特性小卡 ---------- */
 .features{display:flex;gap:10px;margin:18px 16px 0;}
-.feat{flex:1;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border:.5px solid var(--line);border-radius:18px;padding:14px 12px;text-align:center;box-shadow:var(--shadow);}
-.feat .fi{font-size:22px;}
-.feat .ft{font-size:12.5px;font-weight:600;color:var(--ink);margin-top:5px;}
-.feat .fs{font-size:11px;color:var(--ink3);margin-top:1px;}
-
-/* ---------- 预览 ---------- */
+.feat{flex:1;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:.5px solid var(--line);border-radius:18px;padding:14px 12px;text-align:center;box-shadow:var(--shadow);}
+.feat .fi{font-size:22px;} .feat .ft{font-size:12.5px;font-weight:600;margin-top:5px;} .feat .fs{font-size:11px;color:var(--ink3);margin-top:1px;}
 .preview{margin:18px 16px 0;display:none;animation:rise .4s cubic-bezier(.2,.8,.2,1);}
-.preview .frame{border-radius:24px;overflow:hidden;box-shadow:var(--shadow-lg);position:relative;background:#000;}
+.preview .frame{border-radius:24px;overflow:hidden;box-shadow:var(--shadow-lg);background:#000;}
 .preview img{width:100%;display:block;}
-.preview .note{width:100%;margin-top:12px;border:.5px solid var(--line);border-radius:16px;padding:13px 15px;
-  font-size:15px;background:var(--glass-strong);resize:none;font-family:inherit;color:var(--ink);box-shadow:var(--shadow);}
-.preview .note::placeholder{color:var(--ink3);}
-.btn-go{display:block;width:100%;margin-top:12px;border:none;border-radius:18px;padding:17px;
-  background:var(--ink);color:#fff;font-size:17px;font-weight:700;cursor:pointer;letter-spacing:.3px;
-  box-shadow:0 10px 26px rgba(0,0,0,.22);transition:transform .2s;}
-.btn-go:active{transform:scale(.98);}
-.btn-go[disabled]{opacity:.5;}
-
-/* ---------- 加载 ---------- */
+.note{width:100%;margin-top:12px;border:.5px solid var(--line);border-radius:16px;padding:13px 15px;font-size:15px;background:var(--glass-strong);resize:none;font-family:inherit;color:var(--ink);box-shadow:var(--shadow);}
+.note::placeholder{color:var(--ink3);}
+.btn-go{display:block;width:100%;margin-top:12px;border:none;border-radius:18px;padding:17px;background:var(--ink);color:#fff;font-size:17px;font-weight:700;cursor:pointer;letter-spacing:.3px;box-shadow:0 10px 26px rgba(0,0,0,.22);transition:transform .2s;}
+.btn-go:active{transform:scale(.98);} .btn-go[disabled]{opacity:.5;}
 .loading{display:none;margin:26px 16px 0;text-align:center;}
-.loading .ring{width:44px;height:44px;margin:0 auto 14px;border-radius:50%;
-  border:4px solid rgba(52,199,89,.18);border-top-color:var(--green);animation:spin .8s linear infinite;}
-.loading .lt{font-size:15px;color:var(--ink2);font-weight:500;}
-.loading .ls{font-size:13px;color:var(--ink3);margin-top:3px;}
+.loading .ring{width:44px;height:44px;margin:0 auto 14px;border-radius:50%;border:4px solid rgba(52,199,89,.18);border-top-color:var(--green);animation:spin .8s linear infinite;}
+.loading .lt{font-size:15px;color:var(--ink2);font-weight:500;} .loading .ls{font-size:13px;color:var(--ink3);margin-top:3px;}
 @keyframes spin{to{transform:rotate(360deg);}}
-
-/* ---------- 结果 ---------- */
 .result{margin:18px 16px 0;}
-.bestpick{border-radius:24px;padding:20px 20px 18px;margin-bottom:16px;position:relative;overflow:hidden;
-  background:linear-gradient(155deg,rgba(255,255,255,.96),rgba(240,255,244,.96));
-  border:.5px solid rgba(52,199,89,.3);box-shadow:0 14px 36px rgba(40,167,69,.16);animation:rise .5s cubic-bezier(.2,.8,.2,1);}
+.bestpick{border-radius:24px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden;background:linear-gradient(155deg,rgba(255,255,255,.96),rgba(240,255,244,.96));border:.5px solid rgba(52,199,89,.3);box-shadow:0 14px 36px rgba(40,167,69,.16);animation:rise .5s cubic-bezier(.2,.8,.2,1);}
 .bestpick .crown{font-size:13px;font-weight:800;color:var(--green-d);letter-spacing:1px;display:flex;align-items:center;gap:7px;}
-.bestpick .crown .badge{background:var(--green);color:#fff;font-size:11px;padding:2px 9px;border-radius:999px;letter-spacing:.5px;}
+.bestpick .crown .badge{background:var(--green);color:#fff;font-size:11px;padding:2px 9px;border-radius:999px;}
 .bestpick .txt{font-size:18px;font-weight:700;margin-top:9px;line-height:1.45;letter-spacing:-.2px;}
 .scene{font-size:13px;color:var(--ink3);margin:0 4px 14px;display:flex;align-items:center;gap:6px;}
-
-.card{background:var(--glass-strong);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border:.5px solid var(--line);border-radius:22px;padding:18px 18px 16px;margin-bottom:14px;
-  box-shadow:var(--shadow);animation:rise .5s cubic-bezier(.2,.8,.2,1) both;}
+.card{background:var(--glass-strong);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:.5px solid var(--line);border-radius:22px;padding:18px;margin-bottom:14px;box-shadow:var(--shadow);animation:rise .5s cubic-bezier(.2,.8,.2,1) both;}
 .card .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
-.card .nm{font-size:19px;font-weight:800;letter-spacing:-.3px;}
-.card .cat{font-size:12px;color:var(--ink3);font-weight:500;margin-top:2px;}
+.card .nm{font-size:19px;font-weight:800;letter-spacing:-.3px;} .card .cat{font-size:12px;color:var(--ink3);font-weight:500;margin-top:2px;}
 .vbadge{font-size:13px;font-weight:800;padding:6px 13px;border-radius:999px;color:#fff;white-space:nowrap;letter-spacing:.3px;}
-.v-最佳{background:var(--green);} .v-不错{background:var(--blue);}
-.v-一般{background:var(--orange);} .v-别买{background:var(--red);}
+.v-最佳{background:var(--green);} .v-不错{background:var(--blue);} .v-一般{background:var(--orange);} .v-别买{background:var(--red);}
 .pos{font-size:13px;color:var(--ink2);margin-top:8px;display:flex;align-items:center;gap:5px;}
-
 .score{display:flex;align-items:center;gap:11px;margin:13px 0 14px;}
 .score .track{flex:1;height:8px;border-radius:6px;background:rgba(0,0,0,.06);overflow:hidden;}
 .score .fill{height:100%;border-radius:6px;transition:width .9s cubic-bezier(.2,.9,.2,1);}
 .score .num{font-size:14px;font-weight:800;color:var(--ink2);width:36px;text-align:right;}
-
 .reasons{list-style:none;padding:0;margin:0 0 14px;}
 .reasons li{font-size:14.5px;line-height:1.55;padding-left:24px;position:relative;margin-bottom:7px;color:#333;}
-.reasons li::before{content:"";position:absolute;left:2px;top:7px;width:14px;height:14px;border-radius:50%;
-  background:var(--green);
+.reasons li::before{content:"";position:absolute;left:2px;top:7px;width:14px;height:14px;border-radius:50%;background:var(--green);
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M9 16.2l-3.5-3.5L4 14.2 9 19 20 8l-1.5-1.5z'/%3E%3C/svg%3E") center/13px no-repeat;
   mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M9 16.2l-3.5-3.5L4 14.2 9 19 20 8l-1.5-1.5z'/%3E%3C/svg%3E") center/13px no-repeat;}
-
-.cal{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,rgba(255,159,10,.1),rgba(255,159,10,.04));
-  border-radius:15px;padding:12px 15px;}
-.cal .ring{width:46px;height:46px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  background:conic-gradient(var(--orange) var(--p,40%),rgba(255,159,10,.15) 0);}
-.cal .ring i{width:38px;height:38px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;
-  font-size:14px;font-weight:800;color:#c77d00;font-style:normal;}
-.cal .meta{flex:1;}
-.cal .meta .big{font-size:15px;font-weight:700;}
-.cal .meta .nt{font-size:12.5px;color:var(--ink2);margin-top:1px;}
-
-.tips{background:linear-gradient(135deg,rgba(10,132,255,.1),rgba(10,132,255,.03));
-  border:.5px solid rgba(10,132,255,.18);border-radius:20px;padding:16px 18px;font-size:14.5px;line-height:1.6;margin-top:4px;color:#1a3a5c;}
+.cal{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,rgba(255,159,10,.1),rgba(255,159,10,.04));border-radius:15px;padding:12px 15px;}
+.cal .ring{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:conic-gradient(var(--orange) var(--p,40%),rgba(255,159,10,.15) 0);}
+.cal .ring i{width:38px;height:38px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#c77d00;font-style:normal;}
+.cal .meta{flex:1;} .cal .meta .big{font-size:15px;font-weight:700;} .cal .meta .nt{font-size:12.5px;color:var(--ink2);margin-top:1px;}
+.tips{background:linear-gradient(135deg,rgba(10,132,255,.1),rgba(10,132,255,.03));border:.5px solid rgba(10,132,255,.18);border-radius:20px;padding:16px 18px;font-size:14.5px;line-height:1.6;margin-top:4px;color:#1a3a5c;}
 .tips .h{font-weight:800;color:var(--blue);display:flex;align-items:center;gap:7px;margin-bottom:6px;font-size:14px;}
+.errbox{background:linear-gradient(135deg,rgba(255,69,58,.1),rgba(255,69,58,.03));border:.5px solid rgba(255,69,58,.22);color:#c0291f;border-radius:20px;padding:18px 20px;font-size:15px;line-height:1.55;}
 
-.errbox{background:linear-gradient(135deg,rgba(255,69,58,.1),rgba(255,69,58,.03));border:.5px solid rgba(255,69,58,.22);
-  color:#c0291f;border-radius:20px;padding:18px 20px;font-size:15px;line-height:1.55;}
+/* ---------- 营养 ---------- */
+.calhero{display:flex;align-items:center;gap:20px;}
+.calring{width:128px;height:128px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  background:conic-gradient(var(--rc,var(--green)) var(--p,0%),rgba(0,0,0,.06) 0);transition:all .8s cubic-bezier(.2,.9,.2,1);}
+.calring .in{width:104px;height:104px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px rgba(0,0,0,.03);}
+.calring .in b{font-size:26px;font-weight:800;letter-spacing:-1px;line-height:1;}
+.calring .in span{font-size:11px;color:var(--ink3);margin-top:3px;}
+.calside{flex:1;}
+.calside .k{font-size:13px;color:var(--ink2);margin-bottom:2px;}
+.calside .v{font-size:17px;font-weight:700;margin-bottom:10px;}
+.calside .v.warn{color:var(--red);}
+.quickadd{display:flex;gap:8px;margin-top:6px;}
+.quickadd input{flex:1;min-width:0;border:.5px solid var(--line);border-radius:13px;padding:12px;font-size:15px;background:#fff;font-family:inherit;}
+.quickadd input.kc{flex:0 0 78px;}
+.addbtn{border:none;border-radius:13px;background:var(--green);color:#fff;font-weight:800;font-size:20px;width:48px;flex-shrink:0;cursor:pointer;}
+.addbtn:active{transform:scale(.94);}
+.foodrow{display:flex;align-items:center;gap:10px;padding:12px 2px;border-bottom:.5px solid var(--line);}
+.foodrow:last-child{border-bottom:none;}
+.foodrow .ic{width:34px;height:34px;border-radius:10px;background:rgba(255,159,10,.14);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.foodrow .fn{flex:1;font-size:15px;font-weight:600;}
+.foodrow .fn small{display:block;color:var(--ink3);font-weight:400;font-size:12px;}
+.foodrow .fk{font-size:15px;font-weight:800;color:#c77d00;}
+.foodrow .del{border:none;background:none;color:var(--ink3);font-size:20px;cursor:pointer;padding:2px 4px;line-height:1;}
+.empty{text-align:center;color:var(--ink3);font-size:14px;padding:18px 0;}
+.chart7{display:flex;align-items:flex-end;justify-content:space-between;gap:7px;height:120px;margin-top:6px;position:relative;}
+.chart7 .col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;}
+.chart7 .bar{width:70%;max-width:26px;border-radius:6px 6px 3px 3px;background:linear-gradient(to top,var(--green),#7fe09a);min-height:3px;transition:height .7s cubic-bezier(.2,.9,.2,1);}
+.chart7 .bar.over{background:linear-gradient(to top,var(--red),#ff8a80);}
+.chart7 .bar.today{box-shadow:0 0 0 2px rgba(52,199,89,.3);}
+.chart7 .wd{font-size:11px;color:var(--ink3);margin-top:6px;}
+.chart7 .val{font-size:9.5px;color:var(--ink3);margin-bottom:3px;}
+.goalline{position:absolute;left:0;right:0;border-top:1.5px dashed rgba(255,69,58,.5);}
+.goalline span{position:absolute;right:0;top:-15px;font-size:9px;color:var(--red);font-weight:700;background:var(--bg);padding:0 3px;}
+.mealres{margin-top:12px;background:linear-gradient(135deg,rgba(52,199,89,.1),rgba(52,199,89,.03));border:.5px solid rgba(52,199,89,.22);border-radius:16px;padding:14px;display:none;}
+.mealres .mt{font-weight:800;font-size:16px;} .mealres .mi{font-size:13px;color:var(--ink2);margin:4px 0 10px;}
 
-/* ---------- 底部 Tab ---------- */
-.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:50;
-  padding:8px 18px calc(8px + var(--safe-b));
+/* ---------- 健康 ---------- */
+.seg{display:flex;background:rgba(0,0,0,.05);border-radius:12px;padding:3px;}
+.seg button{flex:1;border:none;background:none;padding:9px;border-radius:9px;font-size:14px;font-weight:600;color:var(--ink2);font-family:inherit;cursor:pointer;}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:var(--shadow);}
+.field{display:flex;align-items:center;justify-content:space-between;padding:13px 2px;border-bottom:.5px solid var(--line);}
+.field:last-child{border-bottom:none;}
+.field label{font-size:15px;color:var(--ink);font-weight:500;}
+.field .ctrl{display:flex;align-items:center;gap:8px;}
+.field input,.field select{border:.5px solid var(--line);border-radius:11px;padding:9px 11px;font-size:15px;background:#fff;font-family:inherit;text-align:right;width:88px;}
+.field .unit{font-size:13px;color:var(--ink3);width:26px;}
+.metricgrid{display:flex;gap:12px;}
+.mtile{flex:1;text-align:center;padding:6px 0;}
+.mtile .mv{font-size:28px;font-weight:800;letter-spacing:-1px;line-height:1;}
+.mtile .ml{font-size:12px;color:var(--ink3);margin-top:5px;}
+.bmibar{height:12px;border-radius:6px;margin:16px 0 8px;position:relative;
+  background:linear-gradient(to right,#5ac8fa 0%,#34c759 28%,#ffcc00 55%,#ff9f0a 72%,#ff453a 100%);}
+.bmimark{position:absolute;top:-5px;width:4px;height:22px;border-radius:2px;background:#1d1d1f;box-shadow:0 0 0 2px #fff;transition:left .6s cubic-bezier(.2,.9,.2,1);}
+.bmicat{text-align:center;font-size:15px;font-weight:700;margin-top:4px;}
+.reccard{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.reccard .rv{font-size:26px;font-weight:800;letter-spacing:-1px;}
+.reccard .rl{font-size:12.5px;color:var(--ink2);margin-top:2px;}
+.wchart{width:100%;height:120px;margin-top:6px;}
+.water{display:flex;align-items:center;gap:14px;}
+.water .wbig{font-size:24px;font-weight:800;letter-spacing:-.5px;}
+.water .wbig small{font-size:13px;color:var(--ink3);font-weight:500;}
+.water .dots{display:flex;flex-wrap:wrap;gap:7px;flex:1;}
+.water .dot{width:26px;height:30px;border-radius:6px 6px 9px 9px;background:rgba(10,132,255,.12);display:flex;align-items:center;justify-content:center;font-size:14px;}
+.water .dot.full{background:rgba(10,132,255,.85);}
+.wbtns{display:flex;gap:8px;}
+.wbtns button{width:42px;height:42px;border-radius:12px;border:none;font-size:22px;font-weight:700;cursor:pointer;background:rgba(10,132,255,.12);color:var(--blue);font-family:inherit;}
+.wbtns button:active{transform:scale(.94);}
+
+/* ---------- 我的 ---------- */
+.melist .field{cursor:pointer;}
+.melist .field .ar{color:var(--ink3);font-size:18px;}
+
+/* Tab bar */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:50;padding:8px 14px calc(8px + var(--safe-b));
   background:rgba(255,255,255,.82);backdrop-filter:saturate(180%) blur(24px);-webkit-backdrop-filter:saturate(180%) blur(24px);
   border-top:.5px solid var(--line);display:flex;max-width:600px;margin:0 auto;}
 .tab{flex:1;text-align:center;color:var(--ink3);cursor:pointer;padding:4px 0;font-size:10.5px;font-weight:600;transition:color .2s;}
-.tab .ti{font-size:23px;display:block;line-height:1.1;margin-bottom:2px;filter:grayscale(1) opacity(.55);}
-.tab.on{color:var(--green-d);}
-.tab.on .ti{filter:none;}
+.tab .ti{font-size:23px;display:block;line-height:1.1;margin-bottom:2px;filter:grayscale(1) opacity(.5);transition:.2s;}
+.tab.on{color:var(--green-d);} .tab.on .ti{filter:none;transform:translateY(-1px);}
 
-/* ---------- 弹层(key设置 / onboarding) ---------- */
-.sheet-mask{position:fixed;inset:0;background:rgba(0,0,0,.32);backdrop-filter:blur(3px);z-index:100;
-  display:none;align-items:flex-end;justify-content:center;animation:fade .25s;}
+/* 弹层 */
+.sheet-mask{position:fixed;inset:0;background:rgba(0,0,0,.32);backdrop-filter:blur(3px);z-index:100;display:none;align-items:flex-end;justify-content:center;animation:fade .25s;}
 .sheet-mask.show{display:flex;}
-.sheet{width:100%;max-width:600px;background:var(--bg);border-radius:28px 28px 0 0;padding:10px 22px calc(26px + var(--safe-b));
-  box-shadow:0 -10px 40px rgba(0,0,0,.2);animation:slideup .35s cubic-bezier(.2,.8,.2,1);max-height:92vh;overflow-y:auto;}
+.sheet{width:100%;max-width:600px;background:var(--bg);border-radius:28px 28px 0 0;padding:10px 22px calc(26px + var(--safe-b));box-shadow:0 -10px 40px rgba(0,0,0,.2);animation:slideup .35s cubic-bezier(.2,.8,.2,1);max-height:92vh;overflow-y:auto;}
 .sheet .grip{width:38px;height:5px;border-radius:3px;background:rgba(0,0,0,.16);margin:0 auto 16px;}
 .sheet h3{font-size:23px;font-weight:800;margin:4px 0 4px;letter-spacing:-.3px;}
 .sheet p{font-size:14.5px;color:var(--ink2);line-height:1.6;margin:0 0 14px;}
-.sheet ol{padding-left:20px;margin:0 0 16px;}
-.sheet ol li{font-size:14.5px;line-height:1.7;color:#333;margin-bottom:4px;}
+.sheet ol{padding-left:20px;margin:0 0 16px;} .sheet ol li{font-size:14.5px;line-height:1.7;color:#333;margin-bottom:4px;}
 .sheet a{color:var(--blue);font-weight:600;text-decoration:none;}
-.sheet input{width:100%;border:.5px solid var(--line);border-radius:15px;padding:15px;font-size:16px;
-  background:#fff;font-family:inherit;box-shadow:var(--shadow);margin-bottom:12px;}
-.sheet .save{display:block;width:100%;border:none;border-radius:16px;padding:16px;background:var(--green);color:#fff;
-  font-size:17px;font-weight:700;cursor:pointer;box-shadow:0 10px 24px rgba(52,199,89,.32);}
+.sheet input{width:100%;border:.5px solid var(--line);border-radius:15px;padding:15px;font-size:16px;background:#fff;font-family:inherit;box-shadow:var(--shadow);margin-bottom:12px;}
+.sheet .save{display:block;width:100%;border:none;border-radius:16px;padding:16px;background:var(--green);color:#fff;font-size:17px;font-weight:700;cursor:pointer;box-shadow:0 10px 24px rgba(52,199,89,.32);}
 .sheet .save:active{transform:scale(.98);}
 .sheet .ghost{display:block;width:100%;text-align:center;color:var(--ink2);font-size:14px;margin-top:14px;cursor:pointer;background:none;border:none;}
 .keystate{font-size:13px;padding:10px 14px;border-radius:12px;margin-bottom:14px;font-weight:600;}
-.keystate.ok{background:rgba(52,199,89,.12);color:var(--green-d);}
-.keystate.no{background:rgba(255,159,10,.14);color:#b06d00;}
+.keystate.ok{background:rgba(52,199,89,.12);color:var(--green-d);} .keystate.no{background:rgba(255,159,10,.14);color:#b06d00;}
 
 @keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
 @keyframes fade{from{opacity:0;}to{opacity:1;}}
 @keyframes slideup{from{transform:translateY(100%);}to{transform:none;}}
-.toast{position:fixed;left:50%;bottom:calc(100px + var(--safe-b));transform:translateX(-50%) translateY(20px);
-  background:rgba(0,0,0,.86);color:#fff;padding:11px 20px;border-radius:14px;font-size:14px;font-weight:600;z-index:200;
-  opacity:0;transition:.3s;pointer-events:none;max-width:88%;text-align:center;}
+.toast{position:fixed;left:50%;bottom:calc(100px + var(--safe-b));transform:translateX(-50%) translateY(20px);background:rgba(0,0,0,.86);color:#fff;padding:11px 20px;border-radius:14px;font-size:14px;font-weight:600;z-index:200;opacity:0;transition:.3s;pointer-events:none;max-width:88%;text-align:center;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="hero">
-    <div class="eyebrow"><span class="dot"></span>FRESH · 鲜知</div>
-    <div class="title">今天买什么？</div>
-    <div class="subtitle">拍一拍，帮你挑最好的那个 · 看热量</div>
-  </div>
   <div class="gear" id="gearBtn">⚙︎</div>
 
-  <!-- 拍照主卡 -->
-  <div class="shoot-card" id="shootCard">
-    <div class="ico">📷</div>
-    <h2>拍照识别</h2>
-    <p>对着菜 / 水果 / 肉拍一张</p>
-    <div class="arrow">→</div>
-  </div>
-  <label class="albumlink" for="fileInput">或 <b>从相册选一张</b></label>
-  <input type="file" id="fileInput" accept="image/*" capture="environment">
+  <!-- ============ 挑选 ============ -->
+  <section class="view on" id="view-pick">
+    <div class="hero">
+      <div class="eyebrow"><span class="dot"></span>FRESH · 鲜知</div>
+      <div class="title">今天买什么？</div>
+      <div class="subtitle">拍一拍，帮你挑最好的那个 · 看热量</div>
+    </div>
+    <div class="shoot-card" id="shootCard">
+      <div class="ico">📷</div><h2>拍照识别</h2><p>对着菜 / 水果 / 肉拍一张</p><div class="arrow">→</div>
+    </div>
+    <label class="albumlink" for="fileInput">或 <b>从相册选一张</b></label>
+    <input type="file" id="fileInput" accept="image/*" capture="environment">
+    <div class="features">
+      <div class="feat"><div class="fi">🥇</div><div class="ft">挑最好</div><div class="fs">逐个对比</div></div>
+      <div class="feat"><div class="fi">🔥</div><div class="ft">看热量</div><div class="fs">卡路里</div></div>
+      <div class="feat"><div class="fi">👀</div><div class="ft">教你看</div><div class="fs">纹路/光泽</div></div>
+    </div>
+    <div class="preview" id="preview">
+      <div class="frame"><img id="previewImg" alt=""></div>
+      <textarea class="note" id="noteInput" rows="1" placeholder="想补一句？比如：从这几个西瓜里挑最甜的"></textarea>
+      <button class="btn-go" id="goBtn">开始挑选 ✨</button>
+    </div>
+    <div class="loading" id="loading"><div class="ring"></div><div class="lt">正在仔细看这张照片…</div><div class="ls" id="loadingSub">对比挑选中</div></div>
+    <div class="result" id="result"></div>
+  </section>
 
-  <!-- 特性 -->
-  <div class="features">
-    <div class="feat"><div class="fi">🥇</div><div class="ft">挑最好</div><div class="fs">逐个对比</div></div>
-    <div class="feat"><div class="fi">🔥</div><div class="ft">看热量</div><div class="fs">卡路里</div></div>
-    <div class="feat"><div class="fi">👀</div><div class="ft">教你看</div><div class="fs">纹路/光泽</div></div>
-  </div>
+  <!-- ============ 营养 ============ -->
+  <section class="view" id="view-nutri">
+    <div class="hero"><div class="eyebrow"><span class="dot"></span>今日饮食</div><div class="title">吃了多少？</div><div class="subtitle">记一笔，盯住每天的热量</div></div>
+    <div class="scard">
+      <div class="calhero">
+        <div class="calring" id="calRing"><div class="in"><b id="calNow">0</b><span id="calGoal">/ 2000</span></div></div>
+        <div class="calside">
+          <div class="k">还可以吃</div><div class="v" id="calLeft">2000 千卡</div>
+          <button class="minibtn dark" id="mealShotBtn" style="width:100%;padding:11px">📷 拍菜自动记一笔</button>
+        </div>
+      </div>
+      <input type="file" id="mealInput" accept="image/*" capture="environment">
+      <div class="mealres" id="mealRes"></div>
+    </div>
+    <div class="scard">
+      <div class="ch">手动加一笔</div>
+      <div class="quickadd">
+        <input id="fName" type="text" placeholder="吃了啥，如 米饭一碗">
+        <input id="fKcal" class="kc" type="number" inputmode="numeric" placeholder="千卡">
+        <button class="addbtn" id="fAdd">＋</button>
+      </div>
+    </div>
+    <div class="scard">
+      <div class="ch">今日清单 <span id="foodCount" style="color:var(--ink3)"></span></div>
+      <div id="foodList"></div>
+    </div>
+    <div class="scard">
+      <div class="ch">近 7 天</div>
+      <div class="chart7" id="chart7"></div>
+    </div>
+  </section>
 
-  <!-- 预览 -->
-  <div class="preview" id="preview">
-    <div class="frame"><img id="previewImg" alt=""></div>
-    <textarea class="note" id="noteInput" rows="1" placeholder="想补一句？比如：从这几个西瓜里挑最甜的"></textarea>
-    <button class="btn-go" id="goBtn">开始挑选 ✨</button>
-  </div>
+  <!-- ============ 健康 ============ -->
+  <section class="view" id="view-health">
+    <div class="hero"><div class="eyebrow"><span class="dot"></span>健康档案</div><div class="title">我的身体</div><div class="subtitle">算出适合你的每日热量</div></div>
+    <div class="scard">
+      <div class="ch">基本资料</div>
+      <div class="field"><label>性别</label><div class="seg" style="width:140px" id="genderSeg">
+        <button data-g="female">女</button><button data-g="male">男</button></div></div>
+      <div class="field"><label>年龄</label><div class="ctrl"><input id="pAge" type="number" inputmode="numeric"><span class="unit">岁</span></div></div>
+      <div class="field"><label>身高</label><div class="ctrl"><input id="pHeight" type="number" inputmode="numeric"><span class="unit">cm</span></div></div>
+      <div class="field"><label>体重</label><div class="ctrl"><input id="pWeight" type="number" inputmode="decimal"><span class="unit">kg</span></div></div>
+      <div class="field"><label>目标体重</label><div class="ctrl"><input id="pGoalW" type="number" inputmode="decimal"><span class="unit">kg</span></div></div>
+      <div class="field"><label>活动量</label><div class="ctrl"><select id="pAct">
+        <option value="1.2">久坐少动</option><option value="1.375">轻度活动</option>
+        <option value="1.55">中等活动</option><option value="1.725">经常运动</option></select></div></div>
+    </div>
+    <div class="scard">
+      <div class="ch">身体质量指数 BMI</div>
+      <div class="metricgrid">
+        <div class="mtile"><div class="mv" id="bmiVal">—</div><div class="ml">BMI</div></div>
+        <div class="mtile"><div class="mv" id="wDiff">—</div><div class="ml">距目标</div></div>
+      </div>
+      <div class="bmibar"><div class="bmimark" id="bmiMark" style="left:0%"></div></div>
+      <div class="bmicat" id="bmiCat">填上身高体重看结果</div>
+    </div>
+    <div class="scard">
+      <div class="ch">推荐每日热量</div>
+      <div class="reccard">
+        <div><div class="rv" id="tdeeVal">—</div><div class="rl">维持当前体重 · 千卡/天</div></div>
+        <button class="minibtn" id="setGoalBtn">设为营养目标</button>
+      </div>
+      <div class="rl" id="loseHint" style="margin-top:10px;color:var(--ink3)"></div>
+    </div>
+    <div class="scard">
+      <div class="ch">体重趋势 <button class="minibtn blue" id="logWeightBtn">记录今日</button></div>
+      <svg class="wchart" id="wChart" viewBox="0 0 300 120" preserveAspectRatio="none"></svg>
+      <div class="empty" id="wEmpty" style="display:none">还没有记录，点「记录今日」开始</div>
+    </div>
+    <div class="scard">
+      <div class="ch">今日喝水 <span style="color:var(--ink3)">目标 8 杯 · 2L</span></div>
+      <div class="water">
+        <div><div class="wbig"><span id="waterCups">0</span><small> 杯 · <span id="waterMl">0</span>ml</small></div></div>
+        <div class="wbtns"><button id="waterMinus">−</button><button id="waterPlus">＋</button></div>
+      </div>
+      <div class="dots" id="waterDots" style="margin-top:14px"></div>
+    </div>
+  </section>
 
-  <!-- 加载 -->
-  <div class="loading" id="loading">
-    <div class="ring"></div>
-    <div class="lt">正在仔细看这张照片…</div>
-    <div class="ls" id="loadingSub">对比挑选中</div>
-  </div>
-
-  <!-- 结果 -->
-  <div class="result" id="result"></div>
+  <!-- ============ 我的 ============ -->
+  <section class="view" id="view-me">
+    <div class="hero"><div class="eyebrow"><span class="dot"></span>设置</div><div class="title">我的</div><div class="subtitle">鲜知 · 你的口袋健康助手</div></div>
+    <div class="scard melist">
+      <div class="ch">AI 连接</div>
+      <div class="field" id="meKey"><label>识别大脑 (Gemini Key)</label><div class="ctrl"><span id="meKeyState" style="font-size:13px;color:var(--ink3)">未连接</span><span class="ar">›</span></div></div>
+    </div>
+    <div class="scard melist">
+      <div class="ch">数据</div>
+      <div class="field" id="meExport"><label>导出我的数据</label><span class="ar">›</span></div>
+      <div class="field" id="meClear"><label style="color:var(--red)">清空所有记录</label><span class="ar">›</span></div>
+    </div>
+    <div class="scard">
+      <div class="ch">关于</div>
+      <p style="font-size:14px;color:var(--ink2);line-height:1.7;margin:0">所有数据只存在你手机本地，不上传任何服务器。<br>拍照识别用 Google Gemini 免费额度，钥匙也只存本机。<br><br><b>鲜知 Fresh</b> · 把"会挑、会吃、会管"装进一个网页。</p>
+    </div>
+  </section>
 </div>
 
 <!-- Tab bar -->
 <div class="tabbar">
-  <div class="tab on"><span class="ti">🥬</span>挑选</div>
-  <div class="tab" data-soon="营养记录"><span class="ti">📊</span>营养</div>
-  <div class="tab" data-soon="健康档案"><span class="ti">❤️</span>健康</div>
-  <div class="tab" data-soon="我的"><span class="ti">👤</span>我的</div>
+  <div class="tab on" data-view="pick"><span class="ti">🥬</span>挑选</div>
+  <div class="tab" data-view="nutri"><span class="ti">📊</span>营养</div>
+  <div class="tab" data-view="health"><span class="ti">❤️</span>健康</div>
+  <div class="tab" data-view="me"><span class="ti">👤</span>我的</div>
 </div>
 
-<!-- Key 设置弹层 -->
+<!-- Key 弹层 -->
 <div class="sheet-mask" id="keySheet">
   <div class="sheet">
     <div class="grip"></div>
     <h3>连接 AI 大脑</h3>
     <div class="keystate no" id="keyState">尚未连接 · 需要一把免费钥匙</div>
-    <p>本应用用 Google Gemini 免费额度识别照片。<b>免费、不用电脑、钥匙只存你手机本地</b>，不上传到任何服务器。</p>
+    <p>用 Google Gemini 免费额度识别照片。<b>免费、不用电脑、钥匙只存你手机本地</b>，不上传到任何服务器。</p>
     <ol>
       <li>打开 <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/apikey</a>（谷歌账号登录）</li>
       <li>点 <b>Create API key</b>，复制那串 <code>AIza…</code></li>
@@ -263,205 +376,333 @@ input[type=file]{display:none;}
 "use strict";
 const $ = id => document.getElementById(id);
 
-/* ========== 配置：AI 提供方（默认 Gemini，留好切 Claude 的口子） ========== */
-const PROVIDER = "gemini";              // 将来切 "claude" 只需补 callClaude + 改 key 来源
-const GEMINI_MODEL = "gemini-2.5-flash";
-const KEY_STORE = "fresh_gemini_key";
+/* ===== 配置 ===== */
+const PROVIDER="gemini";              // 切 "claude" 仅需补 callClaude + 改 key 来源
+const GEMINI_MODEL="gemini-2.5-flash";
+const KEY_STORE="fresh_gemini_key";
 
-const SYSTEM_PROMPT = `你是一位经验极其丰富的菜市场挑选高手，精通各种蔬菜/水果/肉类/海鲜的新鲜度与品质判断。
+/* ===== 本地存储 ===== */
+function LS(k,d){ try{const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }
+function SS(k,v){ localStorage.setItem(k,JSON.stringify(v)); }
+function pad(n){ return String(n).padStart(2,'0'); }
+function dstr(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function today(){ return dstr(new Date()); }
+function uid(){ return Date.now()+''+Math.floor(Math.random()*1e4); }
+
+/* ===== Key ===== */
+function getKey(){ return localStorage.getItem(KEY_STORE)||""; }
+function setKey(k){ localStorage.setItem(KEY_STORE,k.trim()); refreshKeyState(); }
+function refreshKeyState(){
+  const k=getKey();
+  const el=$("keyState");
+  if(k){ el.className="keystate ok"; el.textContent="✓ 已连接 · 钥匙存于本机 ("+k.slice(0,6)+"…"+k.slice(-4)+")"; $("keyInput").value=k; $("meKeyState").textContent="已连接 ✓"; $("meKeyState").style.color="var(--green-d)"; }
+  else { el.className="keystate no"; el.textContent="尚未连接 · 需要一把免费钥匙"; $("meKeyState").textContent="未连接"; $("meKeyState").style.color="var(--ink3)"; }
+}
+function openKeySheet(){ refreshKeyState(); $("keySheet").classList.add("show"); }
+function closeKeySheet(){ $("keySheet").classList.remove("show"); }
+$("gearBtn").onclick=openKeySheet;
+$("closeKey").onclick=closeKeySheet;
+$("keySheet").onclick=e=>{ if(e.target===$("keySheet")) closeKeySheet(); };
+$("saveKey").onclick=()=>{ const k=$("keyInput").value.trim(); if(!k){toast("请先粘贴 key");return;} setKey(k); closeKeySheet(); toast("已连接 ✓"); };
+
+/* ===== Tab 切换 ===== */
+function switchTab(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='view-'+name));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.view===name));
+  window.scrollTo({top:0,behavior:'instant'});
+  if(name==='nutri') renderNutri();
+  if(name==='health') renderHealth();
+}
+document.querySelectorAll('.tab').forEach(t=> t.onclick=()=>switchTab(t.dataset.view));
+
+/* ============================================================
+   挑选：拍照识别
+   ============================================================ */
+const SYSTEM_PROMPT=`你是一位经验极其丰富的菜市场挑选高手，精通各种蔬菜/水果/肉类/海鲜的新鲜度与品质判断。
 用户会拍一张正在购买的食材照片（可能同一种有好几个，也可能多种混在一起）。
 任务：看图，找出每一种食材，判断品质好坏，明确指出"哪一个/哪几个最好该买"，并给卡路里。
-
 规则：
 - 同一种食材有多个时，必须互相比较谁更好，在 best_pick 和各 item 的 position/verdict 里讲清楚（用位置描述，如"左数第2个"）。
 - pick_reasons 要写"从这张照片真能看出来的"专业线索（如西瓜纹路清晰墨绿/间距均匀、瓜脐小而内凹=熟、肉色鲜红有光泽脂肪洁白）；看不清就诚实说看不清。
 - verdict 只能四选一：最佳 / 不错 / 一般 / 别买。score 是 0-100 整数。
 - calories_per_100g 给常识性估算整数。
 - 看不出是食材或照片不含食材时，返回 ok=false 并在 reason 里说明。
-- tips 用给生活小白的1-2句大白话。
-全部用简体中文。`;
+- tips 用给生活小白的1-2句大白话。全部用简体中文。`;
+const PICK_SCHEMA={type:"OBJECT",properties:{
+  ok:{type:"BOOLEAN"},reason:{type:"STRING"},scene:{type:"STRING"},best_pick:{type:"STRING"},
+  items:{type:"ARRAY",items:{type:"OBJECT",properties:{
+    name:{type:"STRING"},category:{type:"STRING",enum:["水果","蔬菜","肉类","海鲜","其他"]},
+    verdict:{type:"STRING",enum:["最佳","不错","一般","别买"]},score:{type:"NUMBER"},position:{type:"STRING"},
+    pick_reasons:{type:"ARRAY",items:{type:"STRING"}},calories_per_100g:{type:"NUMBER"},calories_note:{type:"STRING"}},
+    propertyOrdering:["name","category","verdict","score","position","pick_reasons","calories_per_100g","calories_note"]}},
+  tips:{type:"STRING"}},propertyOrdering:["ok","reason","scene","best_pick","items","tips"]};
 
-const SCHEMA = {
-  type:"OBJECT",
-  properties:{
-    ok:{type:"BOOLEAN"},
-    reason:{type:"STRING"},
-    scene:{type:"STRING"},
-    best_pick:{type:"STRING"},
-    items:{type:"ARRAY",items:{type:"OBJECT",properties:{
-      name:{type:"STRING"},
-      category:{type:"STRING",enum:["水果","蔬菜","肉类","海鲜","其他"]},
-      verdict:{type:"STRING",enum:["最佳","不错","一般","别买"]},
-      score:{type:"NUMBER"},
-      position:{type:"STRING"},
-      pick_reasons:{type:"ARRAY",items:{type:"STRING"}},
-      calories_per_100g:{type:"NUMBER"},
-      calories_note:{type:"STRING"}
-    },propertyOrdering:["name","category","verdict","score","position","pick_reasons","calories_per_100g","calories_note"]}},
-    tips:{type:"STRING"}
-  },
-  propertyOrdering:["ok","reason","scene","best_pick","items","tips"]
-};
+const MEAL_SYSTEM=`你是营养师。用户拍一张正在吃/准备吃的食物照片。识别这是什么菜/餐，估算整盘的总热量(千卡)，并拆出主要食物项各自的热量。
+- dish: 一句话菜名描述。total_kcal: 整份估算总热量(整数)。
+- items: 每个主要食物项 {name, kcal}。note: 一句吃法/热量小提示。
+- 不是食物时 ok=false。全部简体中文，只输出JSON。`;
+const MEAL_SCHEMA={type:"OBJECT",properties:{
+  ok:{type:"BOOLEAN"},reason:{type:"STRING"},dish:{type:"STRING"},total_kcal:{type:"NUMBER"},
+  items:{type:"ARRAY",items:{type:"OBJECT",properties:{name:{type:"STRING"},kcal:{type:"NUMBER"}},propertyOrdering:["name","kcal"]}},
+  note:{type:"STRING"}},propertyOrdering:["ok","reason","dish","total_kcal","items","note"]};
 
-/* ========== Key 管理 ========== */
-function getKey(){ return localStorage.getItem(KEY_STORE) || ""; }
-function setKey(k){ localStorage.setItem(KEY_STORE, k.trim()); refreshKeyState(); }
-function refreshKeyState(){
-  const k = getKey();
-  const el = $("keyState");
-  if(k){ el.className="keystate ok"; el.textContent="✓ 已连接 · 钥匙存于本机 ("+k.slice(0,6)+"…"+k.slice(-4)+")"; $("keyInput").value=k; }
-  else { el.className="keystate no"; el.textContent="尚未连接 · 需要一把免费钥匙"; }
-}
-
-/* ========== 弹层 ========== */
-function openKeySheet(){ refreshKeyState(); $("keySheet").classList.add("show"); }
-function closeKeySheet(){ $("keySheet").classList.remove("show"); }
-$("gearBtn").onclick = openKeySheet;
-$("closeKey").onclick = closeKeySheet;
-$("keySheet").onclick = e => { if(e.target===$("keySheet")) closeKeySheet(); };
-$("saveKey").onclick = () => {
-  const k = $("keyInput").value.trim();
-  if(!k){ toast("请先粘贴 key"); return; }
-  setKey(k); closeKeySheet(); toast("已连接 ✓ 现在可以拍照了");
-};
-
-/* ========== Tab 占位 ========== */
-document.querySelectorAll('.tab[data-soon]').forEach(t=>{
-  t.onclick = ()=> toast(t.dataset.soon + " · 即将上线");
-});
-
-/* ========== 图片选择 + 压缩 ========== */
-let imgB64 = null, imgMime = "image/jpeg";
-$("shootCard").onclick = () => $("fileInput").click();
-$("fileInput").onchange = e => { if(e.target.files[0]) loadImage(e.target.files[0]); };
-
-function loadImage(file){
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const img = new Image();
-    img.onload = () => {
-      const max = 1024;
-      let w=img.width, h=img.height;
-      if(w>max||h>max){ const r=Math.min(max/w,max/h); w=Math.round(w*r); h=Math.round(h*r); }
-      const cv=document.createElement("canvas"); cv.width=w; cv.height=h;
-      cv.getContext("2d").drawImage(img,0,0,w,h);
-      const url=cv.toDataURL("image/jpeg",0.82);
-      imgB64=url.split(",")[1]; imgMime="image/jpeg";
-      $("previewImg").src=url;
-      $("preview").style.display="block";
-      $("result").innerHTML="";
-      autoGrow($("noteInput"));
-      setTimeout(()=>$("preview").scrollIntoView({behavior:"smooth",block:"center"}),60);
-    };
-    img.src=ev.target.result;
-  };
+let imgB64=null,imgMime="image/jpeg";
+$("shootCard").onclick=()=>$("fileInput").click();
+$("fileInput").onchange=e=>{ if(e.target.files[0]) loadPick(e.target.files[0]); };
+function compress(file,cb){
+  const reader=new FileReader();
+  reader.onload=ev=>{ const img=new Image(); img.onload=()=>{
+    const max=1024; let w=img.width,h=img.height;
+    if(w>max||h>max){ const r=Math.min(max/w,max/h); w=Math.round(w*r); h=Math.round(h*r); }
+    const cv=document.createElement("canvas"); cv.width=w; cv.height=h;
+    cv.getContext("2d").drawImage(img,0,0,w,h);
+    cb(cv.toDataURL("image/jpeg",0.82).split(",")[1], cv.toDataURL("image/jpeg",0.82));
+  }; img.src=ev.target.result; };
   reader.readAsDataURL(file);
+}
+function loadPick(file){
+  compress(file,(b64,url)=>{
+    imgB64=b64; imgMime="image/jpeg";
+    $("previewImg").src=url; $("preview").style.display="block"; $("result").innerHTML="";
+    autoGrow($("noteInput"));
+    setTimeout(()=>$("preview").scrollIntoView({behavior:"smooth",block:"center"}),60);
+  });
 }
 $("noteInput").addEventListener("input",e=>autoGrow(e.target));
 function autoGrow(t){ t.style.height="auto"; t.style.height=t.scrollHeight+"px"; }
+$("goBtn").onclick=analyzePick;
 
-/* ========== 调 AI ========== */
-$("goBtn").onclick = analyze;
-
-async function analyze(){
+async function analyzePick(){
   if(!imgB64) return;
   if(!getKey()){ openKeySheet(); toast("先连一把免费钥匙就能用"); return; }
-  $("preview").style.display="block";
-  $("goBtn").disabled=true;
-  $("result").innerHTML="";
-  $("loading").style.display="block";
-  cycleLoadingText();
+  $("goBtn").disabled=true; $("result").innerHTML=""; $("loading").style.display="block"; cycleLoading();
   try{
-    const data = await callGemini(imgB64, imgMime, $("noteInput").value.trim());
-    $("loading").style.display="none";
-    render(data);
-  }catch(err){
-    $("loading").style.display="none";
-    $("result").innerHTML = `<div class="errbox"><b>没识别成功</b><br>${esc(err.message)}<br><br>${err.hint||""}</div>`;
-  }
+    const txt="请挑选并分析这张食材照片，严格按 JSON schema 输出。"+($("noteInput").value.trim()?("\n用户补充："+$("noteInput").value.trim()):"");
+    const data=await callGemini(imgB64,imgMime,txt,SYSTEM_PROMPT,PICK_SCHEMA);
+    $("loading").style.display="none"; renderPick(data);
+  }catch(err){ $("loading").style.display="none"; $("result").innerHTML=`<div class="errbox"><b>没识别成功</b><br>${esc(err.message)}<br><br>${err.hint||""}</div>`; }
   $("goBtn").disabled=false;
 }
-
 let loadTimer=null;
-function cycleLoadingText(){
-  const msgs=["对比挑选中","在看新鲜度…","在估算热量…","快好了"];
-  let i=0; clearInterval(loadTimer);
-  loadTimer=setInterval(()=>{ i=(i+1)%msgs.length; $("loadingSub").textContent=msgs[i]; },1100);
-}
+function cycleLoading(){ const m=["对比挑选中","在看新鲜度…","在估算热量…","快好了"]; let i=0; clearInterval(loadTimer); loadTimer=setInterval(()=>{i=(i+1)%m.length;$("loadingSub").textContent=m[i];},1100); }
 
-async function callGemini(b64, mime, note){
-  const key = getKey();
-  const userText = "请挑选并分析这张食材照片，严格按 JSON schema 输出。" + (note ? ("\n用户补充：" + note) : "");
-  const body = {
-    systemInstruction:{ parts:[{ text: SYSTEM_PROMPT }] },
-    contents:[{ role:"user", parts:[ { inline_data:{ mime_type:mime, data:b64 } }, { text:userText } ] }],
-    generationConfig:{ responseMimeType:"application/json", responseSchema:SCHEMA, temperature:0.4 }
-  };
-  // 主模型失败(模型名问题)时自动降级到 2.0-flash
-  let data, lastErr;
-  for(const model of [GEMINI_MODEL, "gemini-2.0-flash"]){
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
+/* ===== 通用 Gemini 调用 ===== */
+async function callGemini(b64,mime,userText,system,schema){
+  const key=getKey();
+  const body={ systemInstruction:{parts:[{text:system}]},
+    contents:[{role:"user",parts:[{inline_data:{mime_type:mime,data:b64}},{text:userText}]}],
+    generationConfig:{responseMimeType:"application/json",responseSchema:schema,temperature:0.4} };
+  let data,lastErr;
+  for(const model of [GEMINI_MODEL,"gemini-2.0-flash"]){
+    const url=`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
     let resp;
-    try{
-      resp = await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
-    }catch(e){ const er=new Error("网络连不上 Google"); er.hint="检查手机网络（部分网络需要代理才能访问 Google）"; throw er; }
-    data = await resp.json();
+    try{ resp=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}); }
+    catch(e){ const er=new Error("网络连不上 Google"); er.hint="检查手机网络（部分网络需要代理才能访问 Google）"; throw er; }
+    data=await resp.json();
     if(resp.ok) break;
-    const msg = (data.error && data.error.message) || ("HTTP "+resp.status);
-    const er = new Error(msg);
-    if(resp.status===400 && /API key/i.test(msg)){ er.message="API key 无效"; er.hint="点右上角 ⚙︎ 重新粘贴正确的 Gemini key（AIza 开头）"; throw er; }
-    if(resp.status===403){ er.message="这把 key 的项目还没开通 Gemini"; er.hint="最省事：去 aistudio.google.com/apikey <b>新建</b>一把 key（新建的默认就能用），再到 ⚙︎ 换上"; throw er; }
+    const msg=(data.error&&data.error.message)||("HTTP "+resp.status);
+    const er=new Error(msg);
+    if(resp.status===400&&/API key/i.test(msg)){ er.message="API key 无效"; er.hint="点 ⚙︎ 重新粘贴正确的 Gemini key（AIza 开头）"; throw er; }
+    if(resp.status===403){ er.message="这把 key 的项目还没开通 Gemini"; er.hint="最省事：去 aistudio.google.com/apikey <b>新建</b>一把 key，再到 ⚙︎ 换上"; throw er; }
     if(resp.status===429){ er.message="今天免费额度用完了"; er.hint="明天再来，或换一把 key"; throw er; }
-    if(resp.status===404){ lastErr=er; continue; } // 模型名问题 → 试下一个
+    if(resp.status===404){ lastErr=er; continue; }
     throw er;
   }
-  if(!data || !data.candidates){ throw (lastErr || Object.assign(new Error("识别服务暂不可用"),{hint:"稍后再试"})); }
-  let text="";
-  try{ text = data.candidates[0].content.parts[0].text; }
-  catch(e){ const er=new Error("AI 没返回内容"); er.hint="换张更清楚的照片再试"; throw er; }
-  try{ return JSON.parse(text); }
-  catch(e){ const er=new Error("结果解析失败"); er.hint="再试一次"; throw er; }
+  if(!data||!data.candidates){ throw (lastErr||Object.assign(new Error("识别服务暂不可用"),{hint:"稍后再试"})); }
+  let text=""; try{ text=data.candidates[0].content.parts[0].text; }catch(e){ const er=new Error("AI 没返回内容"); er.hint="换张更清楚的照片再试"; throw er; }
+  try{ return JSON.parse(text); }catch(e){ const er=new Error("结果解析失败"); er.hint="再试一次"; throw er; }
 }
 
-/* ========== 渲染 ========== */
-function vColor(v){ return ({最佳:getCss('--green'),不错:getCss('--blue'),一般:getCss('--orange'),别买:getCss('--red')})[v]||"#999"; }
-function getCss(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
-
-function render(d){
+function vColor(v){ return ({最佳:cssv('--green'),不错:cssv('--blue'),一般:cssv('--orange'),别买:cssv('--red')})[v]||"#999"; }
+function cssv(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+function renderPick(d){
   const R=$("result");
-  if(!d || d.ok===false){
-    R.innerHTML = `<div class="errbox">😕 ${esc((d&&d.reason)||"没认出来，换个角度、离近点再拍一张试试")}</div>`;
-    R.scrollIntoView({behavior:"smooth",block:"start"}); return;
-  }
+  if(!d||d.ok===false){ R.innerHTML=`<div class="errbox">😕 ${esc((d&&d.reason)||"没认出来，换个角度、离近点再拍一张试试")}</div>`; R.scrollIntoView({behavior:"smooth",block:"start"}); return; }
   let h="";
   if(d.best_pick) h+=`<div class="bestpick"><div class="crown">⭐ 该买这个 <span class="badge">BEST</span></div><div class="txt">${esc(d.best_pick)}</div></div>`;
   if(d.scene) h+=`<div class="scene">📸 ${esc(d.scene)}</div>`;
   (d.items||[]).forEach((it,idx)=>{
-    const v=it.verdict||"一般", col=vColor(v);
-    const sc=Math.max(4,Math.min(100,Math.round(it.score||0)));
+    const v=it.verdict||"一般",col=vColor(v),sc=Math.max(4,Math.min(100,Math.round(it.score||0)));
     const reasons=(it.pick_reasons||[]).map(r=>`<li>${esc(r)}</li>`).join("");
-    const cal=it.calories_per_100g;
-    const calRingP=cal!=null?Math.min(100,Math.round(cal/4)):0; // 视觉用,~400kcal满环
-    h+=`<div class="card" style="animation-delay:${idx*0.07}s">
-      <div class="top">
-        <div><div class="nm">${esc(it.name||"食材")}</div><div class="cat">${esc(it.category||"")}</div></div>
-        <span class="vbadge v-${v}">${v}</span>
-      </div>
+    const cal=it.calories_per_100g, ringP=cal!=null?Math.min(100,Math.round(cal/4)):0;
+    h+=`<div class="card" style="animation-delay:${idx*0.07}s"><div class="top"><div><div class="nm">${esc(it.name||"食材")}</div><div class="cat">${esc(it.category||"")}</div></div><span class="vbadge v-${v}">${v}</span></div>
       ${it.position?`<div class="pos">📍 ${esc(it.position)}</div>`:""}
       <div class="score"><div class="track"><div class="fill" style="width:${sc}%;background:${col}"></div></div><div class="num">${sc}</div></div>
       <ul class="reasons">${reasons}</ul>
-      ${cal!=null?`<div class="cal"><div class="ring" style="--p:${calRingP}%"><i>${cal}</i></div><div class="meta"><div class="big">${cal} 千卡 / 100g</div><div class="nt">${esc(it.calories_note||"")}</div></div></div>`:""}
-    </div>`;
+      ${cal!=null?`<div class="cal"><div class="ring" style="--p:${ringP}%"><i>${cal}</i></div><div class="meta"><div class="big">${cal} 千卡 / 100g</div><div class="nt">${esc(it.calories_note||"")}</div></div></div>`:""}</div>`;
   });
   if(d.tips) h+=`<div class="tips"><div class="h">💡 挑选小贴士</div>${esc(d.tips)}</div>`;
-  R.innerHTML=h;
-  setTimeout(()=>R.scrollIntoView({behavior:"smooth",block:"start"}),80);
+  R.innerHTML=h; setTimeout(()=>R.scrollIntoView({behavior:"smooth",block:"start"}),80);
 }
 
+/* ============================================================
+   营养：饮食日记
+   ============================================================ */
+function getFoods(){ return LS('fresh_food_log',[]); }
+function addFood(name,kcal){ const a=getFoods(); a.push({id:uid(),date:today(),name,kcal:Math.round(kcal),ts:Date.now()}); SS('fresh_food_log',a); }
+function delFood(id){ SS('fresh_food_log',getFoods().filter(f=>f.id!==id)); }
+
+function getProfile(){ return LS('fresh_profile',{gender:'female',age:28,height:165,weight:55,goalWeight:52,activity:1.375}); }
+function bmr(p){ const b=10*p.weight+6.25*p.height-5*p.age; return p.gender==='male'?b+5:b-161; }
+function tdee(p){ return Math.round(bmr(p)*p.activity); }
+function getGoal(){ const g=LS('fresh_goal',null); return g?g:(getProfile().weight?tdee(getProfile()):2000); }
+
+function renderNutri(){
+  const foods=getFoods().filter(f=>f.date===today()).sort((a,b)=>b.ts-a.ts);
+  const total=foods.reduce((s,f)=>s+f.kcal,0);
+  const goal=getGoal();
+  const pct=Math.min(100,Math.round(total/goal*100));
+  const over=total>goal;
+  const ring=$("calRing");
+  ring.style.setProperty('--p',pct+'%');
+  ring.style.setProperty('--rc',over?cssv('--red'):cssv('--green'));
+  $("calNow").textContent=total;
+  $("calGoal").textContent="/ "+goal;
+  const left=goal-total;
+  $("calLeft").textContent=(left>=0?left:('超 '+(-left)))+" 千卡";
+  $("calLeft").className="v"+(over?" warn":"");
+  // 清单
+  $("foodCount").textContent=foods.length?("· "+foods.length+" 项"):"";
+  const fl=$("foodList");
+  if(!foods.length){ fl.innerHTML=`<div class="empty">还没记录，拍张菜或手动加一笔 👆</div>`; }
+  else fl.innerHTML=foods.map(f=>`<div class="foodrow"><div class="ic">🍽️</div><div class="fn">${esc(f.name)}</div><div class="fk">${f.kcal}</div><button class="del" data-id="${f.id}">×</button></div>`).join("");
+  fl.querySelectorAll('.del').forEach(b=> b.onclick=()=>{ delFood(b.dataset.id); renderNutri(); toast("已删除"); });
+  // 7天图
+  render7();
+}
+function render7(){
+  const foods=getFoods(); const goal=getGoal();
+  const days=[]; for(let i=6;i>=0;i--){ const d=new Date(); d.setDate(d.getDate()-i); days.push(d); }
+  const wk=['日','一','二','三','四','五','六'];
+  const data=days.map(d=>{ const ds=dstr(d); return {ds,wd:wk[d.getDay()],sum:foods.filter(f=>f.date===ds).reduce((s,f)=>s+f.kcal,0),isToday:ds===today()}; });
+  const maxv=Math.max(goal*1.1,...data.map(x=>x.sum),1);
+  const goalTop=100-Math.round(goal/maxv*100);
+  let h=`<div class="goalline" style="top:${goalTop}%"><span>目标</span></div>`;
+  h+=data.map(x=>{ const hp=Math.round(x.sum/maxv*100); const over=x.sum>goal;
+    return `<div class="col"><div class="val">${x.sum||''}</div><div class="bar ${over?'over':''} ${x.isToday?'today':''}" style="height:${x.sum?Math.max(3,hp):0}%"></div><div class="wd">${x.wd}</div></div>`; }).join("");
+  $("chart7").innerHTML=h;
+}
+$("fAdd").onclick=()=>{
+  const n=$("fName").value.trim(), k=parseInt($("fKcal").value,10);
+  if(!n){ toast("写下吃了啥"); return; }
+  if(!k||k<=0){ toast("填个大概热量(千卡)"); return; }
+  addFood(n,k); $("fName").value=""; $("fKcal").value=""; renderNutri(); toast("记上了 ✓");
+};
+
+/* 拍菜估算 */
+$("mealShotBtn").onclick=()=>{ if(!getKey()){ openKeySheet(); toast("先连钥匙才能拍菜估算"); return; } $("mealInput").click(); };
+$("mealInput").onchange=e=>{ if(e.target.files[0]) analyzeMeal(e.target.files[0]); };
+function analyzeMeal(file){
+  const box=$("mealRes"); box.style.display="block"; box.innerHTML=`<div class="mi">📷 正在估算这顿的热量…</div>`;
+  compress(file,async(b64)=>{
+    try{
+      const d=await callGemini(b64,"image/jpeg","估算这张食物照片的热量，只输出JSON。",MEAL_SYSTEM,MEAL_SCHEMA);
+      if(!d||d.ok===false){ box.innerHTML=`<div class="mi">😕 ${esc((d&&d.reason)||"没认出是食物，换张试试")}</div>`; return; }
+      const items=(d.items||[]).map(i=>`${esc(i.name)} ${i.kcal}`).join(' · ');
+      box.innerHTML=`<div class="mt">${esc(d.dish||'这顿饭')} · ${d.total_kcal} 千卡</div><div class="mi">${items||esc(d.note||'')}</div>
+        <button class="minibtn dark" id="mealAdd" style="width:100%;padding:11px">＋ 记到今日清单</button>`;
+      $("mealAdd").onclick=()=>{ addFood(d.dish||'一餐',d.total_kcal||0); box.style.display="none"; renderNutri(); toast("已记录 ✓"); };
+    }catch(err){ box.innerHTML=`<div class="mi">${esc(err.message)}<br>${err.hint||""}</div>`; }
+  });
+}
+
+/* ============================================================
+   健康：档案 / BMI / TDEE / 体重 / 喝水
+   ============================================================ */
+function saveProfileFromInputs(){
+  const p=getProfile();
+  p.age=parseInt($("pAge").value,10)||p.age;
+  p.height=parseFloat($("pHeight").value)||p.height;
+  p.weight=parseFloat($("pWeight").value)||p.weight;
+  p.goalWeight=parseFloat($("pGoalW").value)||p.goalWeight;
+  p.activity=parseFloat($("pAct").value)||p.activity;
+  SS('fresh_profile',p); computeHealth();
+}
+function renderHealth(){
+  const p=getProfile();
+  $("pAge").value=p.age; $("pHeight").value=p.height; $("pWeight").value=p.weight; $("pGoalW").value=p.goalWeight; $("pAct").value=p.activity;
+  document.querySelectorAll('#genderSeg button').forEach(b=>b.classList.toggle('on',b.dataset.g===p.gender));
+  computeHealth(); renderWeightChart(); renderWater();
+}
+function computeHealth(){
+  const p=getProfile();
+  const bmi=p.weight/Math.pow(p.height/100,2);
+  $("bmiVal").textContent=bmi.toFixed(1);
+  const diff=p.weight-p.goalWeight;
+  $("wDiff").textContent=(diff>0?'+':'')+diff.toFixed(1);
+  $("wDiff").style.color=Math.abs(diff)<0.05?cssv('--green-d'):(diff>0?cssv('--orange'):cssv('--blue'));
+  // BMI 标尺: 映射 15~33 → 0~100%
+  const mark=Math.max(0,Math.min(100,(bmi-15)/(33-15)*100));
+  $("bmiMark").style.left=mark+"%";
+  let cat,col; if(bmi<18.5){cat="偏瘦";col=cssv('--blue');}else if(bmi<24){cat="正常 · 很棒";col=cssv('--green-d');}else if(bmi<28){cat="偏胖";col=cssv('--orange');}else{cat="肥胖";col=cssv('--red');}
+  $("bmiCat").textContent="BMI "+bmi.toFixed(1)+" · "+cat; $("bmiCat").style.color=col;
+  const t=tdee(p);
+  $("tdeeVal").textContent=t;
+  $("loseHint").textContent= diff>0.05 ? `想到 ${p.goalWeight}kg：每天吃约 ${t-400} 千卡（缺口 400），健康减重约每周 0.4kg` : (diff<-0.05?`想增到 ${p.goalWeight}kg：每天约 ${t+300} 千卡`:`保持得不错，维持 ${t} 千卡左右`);
+}
+document.querySelectorAll('#genderSeg button').forEach(b=> b.onclick=()=>{ const p=getProfile(); p.gender=b.dataset.g; SS('fresh_profile',p); renderHealth(); });
+['pAge','pHeight','pWeight','pGoalW'].forEach(id=> $(id).addEventListener('change',saveProfileFromInputs));
+$("pAct").addEventListener('change',saveProfileFromInputs);
+$("setGoalBtn").onclick=()=>{ SS('fresh_goal',tdee(getProfile())); toast("已设为营养目标 ✓"); };
+
+/* 体重日志 */
+function getWeights(){ return LS('fresh_weight_log',[]); }
+$("logWeightBtn").onclick=()=>{
+  const p=getProfile();
+  let arr=getWeights().filter(w=>w.date!==today()); arr.push({date:today(),kg:p.weight}); arr.sort((a,b)=>a.date<b.date?-1:1);
+  SS('fresh_weight_log',arr); renderWeightChart(); toast("已记录今日体重 "+p.weight+"kg");
+};
+function renderWeightChart(){
+  const arr=getWeights().slice(-12);
+  const svg=$("wChart");
+  if(arr.length<2){ svg.style.display="none"; $("wEmpty").style.display="block"; return; }
+  svg.style.display="block"; $("wEmpty").style.display="none";
+  const ks=arr.map(w=>w.kg), mn=Math.min(...ks), mx=Math.max(...ks), rng=(mx-mn)||1;
+  const W=300,H=120,pad=14;
+  const pts=arr.map((w,i)=>{ const x=pad+i*(W-2*pad)/(arr.length-1); const y=H-pad-((w.kg-mn)/rng)*(H-2*pad); return [x,y]; });
+  const line=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  const area=line+` L${pts[pts.length-1][0].toFixed(1)} ${H-pad} L${pts[0][0].toFixed(1)} ${H-pad} Z`;
+  const dots=pts.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.2" fill="#34c759"/>`).join('');
+  svg.innerHTML=`<defs><linearGradient id="wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(52,199,89,.28)"/><stop offset="1" stop-color="rgba(52,199,89,0)"/></linearGradient></defs>
+    <path d="${area}" fill="url(#wg)"/><path d="${line}" fill="none" stroke="#34c759" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>${dots}
+    <text x="${pad}" y="12" font-size="10" fill="#9a9aa0">${mx.toFixed(1)}kg</text><text x="${pad}" y="${H-2}" font-size="10" fill="#9a9aa0">${mn.toFixed(1)}kg</text>`;
+}
+
+/* 喝水 */
+function getWater(){ return LS('fresh_water_'+today(),0); }
+function setWater(n){ SS('fresh_water_'+today(),Math.max(0,Math.min(16,n))); renderWater(); }
+function renderWater(){
+  const c=getWater();
+  $("waterCups").textContent=c; $("waterMl").textContent=c*250;
+  const target=8; let dots='';
+  for(let i=0;i<Math.max(target,c);i++) dots+=`<div class="dot ${i<c?'full':''}">${i<c?'💧':''}</div>`;
+  $("waterDots").innerHTML=dots;
+}
+$("waterPlus").onclick=()=>{ setWater(getWater()+1); if(getWater()===8) toast("达标啦 💧 2L 喝够了"); };
+$("waterMinus").onclick=()=>setWater(getWater()-1);
+
+/* ============================================================
+   我的：数据管理
+   ============================================================ */
+$("meKey").onclick=openKeySheet;
+$("meExport").onclick=()=>{
+  const dump={profile:getProfile(),goal:getGoal(),foods:getFoods(),weights:getWeights()};
+  const blob=new Blob([JSON.stringify(dump,null,2)],{type:"application/json"});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download="鲜知数据_"+today()+".json"; a.click();
+  toast("已导出 JSON");
+};
+$("meClear").onclick=()=>{
+  if(!confirm("确定清空所有饮食/体重/喝水记录？(钥匙和身体资料保留)")) return;
+  ['fresh_food_log','fresh_weight_log'].forEach(k=>localStorage.removeItem(k));
+  Object.keys(localStorage).filter(k=>k.startsWith('fresh_water_')).forEach(k=>localStorage.removeItem(k));
+  toast("已清空记录"); renderNutri();
+};
+
+/* ===== 工具 ===== */
 function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
 function toast(msg){ const t=$("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("show"),2200); }
 
-/* ========== 首次进入引导 ========== */
+/* ===== 启动 ===== */
 window.addEventListener("load",()=>{ refreshKeyState(); if(!getKey()) setTimeout(openKeySheet,500); });
 </script>
 </body>
