@@ -9,15 +9,16 @@
 <title>鲜知 · 挑菜健康助手</title>
 <style>
 :root{
-  --bg:#f2f3f7;
-  --glass:rgba(255,255,255,.72);
-  --glass-strong:rgba(255,255,255,.92);
-  --ink:#1d1d1f; --ink2:#6e6e73; --ink3:#9a9aa0;
-  --line:rgba(0,0,0,.06);
-  --green:#34c759; --green-d:#28a745;
-  --blue:#0a84ff; --orange:#ff9f0a; --red:#ff453a; --purple:#bf5af2;
-  --shadow:0 8px 30px rgba(0,0,0,.08);
-  --shadow-lg:0 20px 50px rgba(0,0,0,.14);
+  --bg:#f2f2f7;
+  --glass:#ffffff;
+  --glass-strong:#ffffff;
+  --ink:#1c1c1e; --ink2:#6e6e73; --ink3:#a1a1a8;
+  --line:rgba(60,60,67,.10);
+  --green:#30d158; --green-d:#248a3d;
+  --blue:#007aff; --orange:#ff9500; --red:#ff3b30; --purple:#bf5af2;
+  --pink:#ff2d55; --cyan:#32ade6; --indigo:#5e5ce6; --water:#32ade6;
+  --shadow:0 1px 2px rgba(0,0,0,.04), 0 8px 22px rgba(0,0,0,.05);
+  --shadow-lg:0 12px 40px rgba(0,0,0,.10);
   --r:22px;
   --safe-b:env(safe-area-inset-bottom,0px);
   --safe-t:env(safe-area-inset-top,0px);
@@ -27,10 +28,7 @@ html,body{margin:0;padding:0;min-height:100%;}
 body{
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","PingFang SC","Helvetica Neue",sans-serif;
   color:var(--ink); background:var(--bg);
-  background-image:
-    radial-gradient(110% 80% at 15% 0%, rgba(52,199,89,.12), transparent 55%),
-    radial-gradient(90% 70% at 95% 8%, rgba(10,132,255,.10), transparent 50%),
-    radial-gradient(80% 60% at 50% 100%, rgba(255,159,10,.08), transparent 60%);
+  background-image: radial-gradient(120% 52% at 50% -8%, rgba(48,209,88,.07), transparent 62%);
   background-attachment:fixed; -webkit-font-smoothing:antialiased; overscroll-behavior-y:none;
 }
 .app{max-width:600px;margin:0 auto;min-height:100vh;padding:0 0 calc(90px + var(--safe-b));}
@@ -49,18 +47,21 @@ body{
 .gear:active{transform:scale(.92);}
 
 /* 通用卡片 / 控件 */
-.scard{background:var(--glass-strong);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border:.5px solid var(--line);border-radius:22px;padding:18px;margin:16px 16px 0;box-shadow:var(--shadow);}
-.scard .ch{font-size:13px;font-weight:700;color:var(--ink3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
+.scard{background:var(--glass-strong);
+  border:.5px solid var(--line);border-radius:20px;padding:18px;margin:14px 16px 0;box-shadow:var(--shadow);}
+.scard .ch{font-size:15px;font-weight:700;color:var(--ink);letter-spacing:-.2px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;}
+.chl{display:inline-flex;align-items:center;gap:9px;min-width:0;}
+.chip{width:24px;height:24px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;color:#fff;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14);}
+.chl .sub{font-size:12px;color:var(--ink3);font-weight:500;}
 .minibtn{border:none;background:rgba(52,199,89,.14);color:var(--green-d);font-weight:700;font-size:13px;padding:7px 13px;border-radius:999px;cursor:pointer;font-family:inherit;}
 .minibtn:active{transform:scale(.95);}
 .minibtn.dark{background:var(--ink);color:#fff;}
 .minibtn.blue{background:rgba(10,132,255,.14);color:var(--blue);}
 
 /* ---------- 挑选 ---------- */
-.shoot-card{margin:16px 16px 0;border-radius:28px;padding:30px 24px 28px;
-  background:linear-gradient(160deg,rgba(52,199,89,.95),rgba(40,167,69,.95));
-  box-shadow:0 18px 44px rgba(40,167,69,.32);position:relative;overflow:hidden;cursor:pointer;transition:transform .25s cubic-bezier(.2,.8,.2,1);}
+.shoot-card{margin:16px 16px 0;border-radius:26px;padding:30px 24px 28px;
+  background:linear-gradient(155deg,#34d85f,#1fae4d);
+  box-shadow:0 14px 36px rgba(40,180,80,.30);position:relative;overflow:hidden;cursor:pointer;transition:transform .25s cubic-bezier(.2,.8,.2,1);}
 .shoot-card:active{transform:scale(.985);}
 .shoot-card::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 80% -10%,rgba(255,255,255,.35),transparent 50%);}
 .shoot-card .ico{width:64px;height:64px;border-radius:20px;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:16px;position:relative;z-index:1;}
@@ -148,6 +149,18 @@ input[type=file]{display:none;}
 .goalline span{position:absolute;right:0;top:-15px;font-size:9px;color:var(--red);font-weight:700;background:var(--bg);padding:0 3px;}
 .mealres{margin-top:12px;background:linear-gradient(135deg,rgba(52,199,89,.1),rgba(52,199,89,.03));border:.5px solid rgba(52,199,89,.22);border-radius:16px;padding:14px;display:none;}
 .mealres .mt{font-weight:800;font-size:16px;} .mealres .mi{font-size:13px;color:var(--ink2);margin:4px 0 10px;}
+/* 配餐推荐 */
+.dietsum{font-size:14px;font-weight:600;color:var(--pink);background:rgba(255,45,85,.08);border-radius:13px;padding:11px 14px;margin-bottom:6px;line-height:1.5;}
+.dietmeal{display:flex;gap:12px;padding:13px 2px;border-bottom:.5px solid var(--line);}
+.dietmeal:last-child{border-bottom:none;}
+.dietmeal .slot{flex:0 0 42px;font-size:13px;font-weight:800;color:var(--pink);padding-top:2px;}
+.dietmeal .dd{flex:1;min-width:0;}
+.dietmeal .dd .dn{font-size:15px;font-weight:600;line-height:1.4;}
+.dietmeal .dd .dw{font-size:12.5px;color:var(--ink3);margin-top:3px;line-height:1.45;}
+.dietmeal .dk{font-size:14px;font-weight:800;color:#c77d00;flex-shrink:0;padding-top:2px;}
+.diettip{font-size:13.5px;color:var(--ink2);line-height:1.55;margin-top:12px;padding-top:12px;border-top:.5px solid var(--line);}
+.dietload{text-align:center;color:var(--ink3);font-size:14px;padding:16px 0;}
+.dietload .ring{width:30px;height:30px;margin:0 auto 10px;border-radius:50%;border:3px solid rgba(255,45,85,.18);border-top-color:var(--pink);animation:spin .8s linear infinite;}
 
 /* ---------- 健康 ---------- */
 .seg{display:flex;background:rgba(0,0,0,.05);border-radius:12px;padding:3px;}
@@ -261,7 +274,11 @@ input[type=file]{display:none;}
       <div class="mealres" id="mealRes"></div>
     </div>
     <div class="scard">
-      <div class="ch">手动加一笔</div>
+      <div class="ch"><span class="chl"><span class="chip" style="background:var(--pink)">🍱</span>今日配餐推荐</span><button class="minibtn" id="dietBtn">智能生成</button></div>
+      <div id="dietBody"><div class="empty">按你的目标 + 今天已吃的，生成专属搭配 👆</div></div>
+    </div>
+    <div class="scard">
+      <div class="ch"><span class="chl"><span class="chip" style="background:var(--orange)">✏️</span>手动加一笔</span></div>
       <div class="quickadd">
         <input id="fName" type="text" placeholder="吃了啥，如 米饭一碗">
         <input id="fKcal" class="kc" type="number" inputmode="numeric" placeholder="千卡">
@@ -269,11 +286,11 @@ input[type=file]{display:none;}
       </div>
     </div>
     <div class="scard">
-      <div class="ch">今日清单 <span id="foodCount" style="color:var(--ink3)"></span></div>
+      <div class="ch"><span class="chl"><span class="chip" style="background:var(--orange)">📋</span>今日清单 <span class="sub" id="foodCount"></span></span></div>
       <div id="foodList"></div>
     </div>
     <div class="scard">
-      <div class="ch">近 7 天</div>
+      <div class="ch"><span class="chl"><span class="chip" style="background:var(--indigo)">📊</span>近 7 天</span></div>
       <div class="chart7" id="chart7"></div>
     </div>
   </section>
@@ -282,7 +299,7 @@ input[type=file]{display:none;}
   <section class="view" id="view-health">
     <div class="hero"><div class="eyebrow"><span class="dot"></span>健康档案</div><div class="title">我的身体</div><div class="subtitle">算出适合你的每日热量</div></div>
     <div class="scard">
-      <div class="ch">基本资料</div>
+      <div class="ch"><span class="chl"><span class="chip" style="background:var(--indigo)">👤</span>基本资料</span></div>
       <div class="field"><label>性别</label><div class="seg" style="width:140px" id="genderSeg">
         <button data-g="female">女</button><button data-g="male">男</button></div></div>
       <div class="field"><label>年龄</label><div class="ctrl"><input id="pAge" type="number" inputmode="numeric"><span class="unit">岁</span></div></div>
@@ -294,7 +311,7 @@ input[type=file]{display:none;}
         <option value="1.55">中等活动</option><option value="1.725">经常运动</option></select></div></div>
     </div>
     <div class="scard">
-      <div class="ch">身体质量指数 BMI</div>
+      <div class="ch"><span class="chl"><span class="chip" style="background:var(--green)">⚖️</span>身体质量指数 BMI</span></div>
       <div class="metricgrid">
         <div class="mtile"><div class="mv" id="bmiVal">—</div><div class="ml">BMI</div></div>
         <div class="mtile"><div class="mv" id="wDiff">—</div><div class="ml">距目标</div></div>
@@ -303,7 +320,15 @@ input[type=file]{display:none;}
       <div class="bmicat" id="bmiCat">填上身高体重看结果</div>
     </div>
     <div class="scard">
-      <div class="ch">推荐每日热量</div>
+      <div class="ch"><span class="chl"><span class="chip" style="background:var(--water)">💧</span>今日喝水 <span class="sub">目标 8 杯 · 2L</span></span></div>
+      <div class="water">
+        <div><div class="wbig"><span id="waterCups">0</span><small> 杯 · <span id="waterMl">0</span>ml</small></div></div>
+        <div class="wbtns"><button id="waterMinus">−</button><button id="waterPlus">＋</button></div>
+      </div>
+      <div class="dots" id="waterDots" style="margin-top:14px"></div>
+    </div>
+    <div class="scard">
+      <div class="ch"><span class="chl"><span class="chip" style="background:var(--orange)">🔥</span>推荐每日热量</span></div>
       <div class="reccard">
         <div><div class="rv" id="tdeeVal">—</div><div class="rl">维持当前体重 · 千卡/天</div></div>
         <button class="minibtn" id="setGoalBtn">设为营养目标</button>
@@ -311,17 +336,9 @@ input[type=file]{display:none;}
       <div class="rl" id="loseHint" style="margin-top:10px;color:var(--ink3)"></div>
     </div>
     <div class="scard">
-      <div class="ch">体重趋势 <button class="minibtn blue" id="logWeightBtn">记录今日</button></div>
+      <div class="ch"><span class="chl"><span class="chip" style="background:var(--purple)">📈</span>体重趋势</span><button class="minibtn blue" id="logWeightBtn">记录今日</button></div>
       <svg class="wchart" id="wChart" viewBox="0 0 300 120" preserveAspectRatio="none"></svg>
       <div class="empty" id="wEmpty" style="display:none">还没有记录，点「记录今日」开始</div>
-    </div>
-    <div class="scard">
-      <div class="ch">今日喝水 <span style="color:var(--ink3)">目标 8 杯 · 2L</span></div>
-      <div class="water">
-        <div><div class="wbig"><span id="waterCups">0</span><small> 杯 · <span id="waterMl">0</span>ml</small></div></div>
-        <div class="wbtns"><button id="waterMinus">−</button><button id="waterPlus">＋</button></div>
-      </div>
-      <div class="dots" id="waterDots" style="margin-top:14px"></div>
     </div>
   </section>
 
@@ -329,16 +346,16 @@ input[type=file]{display:none;}
   <section class="view" id="view-me">
     <div class="hero"><div class="eyebrow"><span class="dot"></span>设置</div><div class="title">我的</div><div class="subtitle">鲜知 · 你的口袋健康助手</div></div>
     <div class="scard melist">
-      <div class="ch">AI 连接</div>
+      <div class="ch"><span class="chl"><span class="chip" style="background:var(--blue)">🧠</span>AI 连接</span></div>
       <div class="field" id="meKey"><label>识别大脑 (Gemini Key)</label><div class="ctrl"><span id="meKeyState" style="font-size:13px;color:var(--ink3)">未连接</span><span class="ar">›</span></div></div>
     </div>
     <div class="scard melist">
-      <div class="ch">数据</div>
+      <div class="ch"><span class="chl"><span class="chip" style="background:var(--ink3)">🗂️</span>数据</span></div>
       <div class="field" id="meExport"><label>导出我的数据</label><span class="ar">›</span></div>
       <div class="field" id="meClear"><label style="color:var(--red)">清空所有记录</label><span class="ar">›</span></div>
     </div>
     <div class="scard">
-      <div class="ch">关于</div>
+      <div class="ch"><span class="chl"><span class="chip" style="background:var(--blue)">ℹ️</span>关于</span></div>
       <p style="font-size:14px;color:var(--ink2);line-height:1.7;margin:0">所有数据只存在你手机本地，不上传任何服务器。<br>拍照识别用 Google Gemini 免费额度，钥匙也只存本机。<br><br><b>鲜知 Fresh</b> · 把"会挑、会吃、会管"装进一个网页。</p>
     </div>
   </section>
@@ -487,10 +504,11 @@ let loadTimer=null;
 function cycleLoading(){ const m=["对比挑选中","在看新鲜度…","在估算热量…","快好了"]; let i=0; clearInterval(loadTimer); loadTimer=setInterval(()=>{i=(i+1)%m.length;$("loadingSub").textContent=m[i];},1100); }
 
 /* ===== 通用 Gemini 调用 ===== */
-async function callGemini(b64,mime,userText,system,schema){
+async function callGemini(b64,mime,userText,system,schema,textOnly){
   const key=getKey();
+  const parts = textOnly ? [{text:userText}] : [{inline_data:{mime_type:mime,data:b64}},{text:userText}];
   const body={ systemInstruction:{parts:[{text:system}]},
-    contents:[{role:"user",parts:[{inline_data:{mime_type:mime,data:b64}},{text:userText}]}],
+    contents:[{role:"user",parts}],
     generationConfig:{responseMimeType:"application/json",responseSchema:schema,temperature:0.4} };
   let data,lastErr;
   for(const model of [GEMINI_MODEL,"gemini-2.0-flash"]){
@@ -605,6 +623,47 @@ function analyzeMeal(file){
     }catch(err){ box.innerHTML=`<div class="mi">${esc(err.message)}<br>${err.hint||""}</div>`; }
   });
 }
+
+/* ===== 定制化配餐推荐 ===== */
+const DIET_SYSTEM=`你是注册营养师，擅长贴近中国人日常的家常饮食搭配。
+根据用户的身体资料、热量目标、今天已经吃了什么、还剩多少额度，给出"今天剩下几餐该怎么吃"的具体配餐建议。
+要求：
+- 只安排还没吃的餐（参考已吃清单，别重复推已吃过的）。各餐热量加起来尽量贴合"剩余额度"，不要明显超。
+- 菜要好买好做、接地气（中式家常为主），给出具体食物和大致分量，不要泛泛而谈。
+- 结合用户目标：减脂要高蛋白高纤维有饱腹感、控油；增肌要够蛋白和热量；维持则均衡。
+- 每餐写清 slot(早餐/午餐/晚餐/加餐)、dishes(具体搭配)、kcal(该餐估算热量整数)、why(为什么这样配，一句)。
+- goal_summary 一句话点明目标和剩余额度。tips 一句额外提醒。全部简体中文，只输出JSON。`;
+const DIET_SCHEMA={type:"OBJECT",properties:{
+  ok:{type:"BOOLEAN"},goal_summary:{type:"STRING"},
+  meals:{type:"ARRAY",items:{type:"OBJECT",properties:{
+    slot:{type:"STRING",enum:["早餐","午餐","晚餐","加餐"]},dishes:{type:"STRING"},kcal:{type:"NUMBER"},why:{type:"STRING"}},
+    propertyOrdering:["slot","dishes","kcal","why"]}},
+  total_kcal:{type:"NUMBER"},tips:{type:"STRING"}},propertyOrdering:["ok","goal_summary","meals","total_kcal","tips"]};
+
+$("dietBtn").onclick=async()=>{
+  if(!getKey()){ openKeySheet(); toast("先连钥匙才能智能配餐"); return; }
+  const p=getProfile(), goal=getGoal();
+  const eaten=getFoods().filter(f=>f.date===today());
+  const consumed=eaten.reduce((s,f)=>s+f.kcal,0);
+  const remain=goal-consumed;
+  const goalType = p.weight-p.goalWeight>0.5?'减脂':(p.weight-p.goalWeight<-0.5?'增肌增重':'维持体重');
+  const hour=new Date().getHours();
+  const eatList=eaten.length?eaten.map(f=>f.name+'('+f.kcal+'千卡)').join('、'):'还没吃东西';
+  const body=$("dietBody");
+  body.innerHTML=`<div class="dietload"><div class="ring"></div>正在为你定制今日搭配…</div>`;
+  const userText=`用户资料：${p.gender==='male'?'男':'女'}，${p.age}岁，身高${p.height}cm，体重${p.weight}kg，目标体重${p.goalWeight}kg。
+目标类型：${goalType}。每日热量目标：${goal}千卡。
+今天已吃：${eatList}，已摄入约${consumed}千卡，还剩约${remain}千卡额度。
+现在大约${hour}点。请安排今天剩下还没吃的餐，给出配餐建议，只输出JSON。`;
+  try{
+    const d=await callGemini("","text/plain",userText,DIET_SYSTEM,DIET_SCHEMA,true);
+    if(!d||d.ok===false){ body.innerHTML=`<div class="empty">😕 暂时没法生成，稍后再试</div>`; return; }
+    let h=`<div class="dietsum">🎯 ${esc(d.goal_summary||'')}</div>`;
+    h+=(d.meals||[]).map(m=>`<div class="dietmeal"><div class="slot">${esc(m.slot||'')}</div><div class="dd"><div class="dn">${esc(m.dishes||'')}</div><div class="dw">${esc(m.why||'')}</div></div><div class="dk">${m.kcal!=null?m.kcal:''}</div></div>`).join("");
+    if(d.tips) h+=`<div class="diettip">💡 ${esc(d.tips)}</div>`;
+    body.innerHTML=h;
+  }catch(err){ body.innerHTML=`<div class="empty">${esc(err.message)} ${err.hint||""}</div>`; }
+};
 
 /* ============================================================
    健康：档案 / BMI / TDEE / 体重 / 喝水
