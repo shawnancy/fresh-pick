@@ -277,6 +277,21 @@ body{background-image:none;}
 .remindrow .rl-lab{font-size:15px;font-weight:500;color:var(--ink);}
 .remindrow select{border-radius:11px;padding:9px 11px;font-size:14px;font-family:inherit;color:var(--ink);}
 .remindhint{font-size:12.5px;color:var(--ink3);margin-top:9px;line-height:1.55;}
+/* 喝水杯(横排·莫兰迪灰蓝, 取代竖排emoji) */
+.dots{display:flex;flex-wrap:wrap;gap:9px;}
+.dots .dot{width:21px;height:27px;border-radius:5px 5px 11px 11px;background:rgba(139,157,167,.16);
+  border:1px solid rgba(139,157,167,.30);font-size:0;transition:background .2s;}
+.dots .dot.full{background:#9aabb4;border-color:#9aabb4;}
+/* 今日活动(健康App/手表数据) */
+.actgrid{display:flex;gap:12px;}
+.actile{flex:1;text-align:center;padding:4px 0;}
+.actile .av{font-size:24px;font-weight:800;letter-spacing:-.5px;color:var(--ink);}
+.actile .av small{font-size:12px;color:var(--ink3);font-weight:600;}
+.actile .al{font-size:12px;color:var(--ink3);margin-top:4px;}
+.actsrc{font-size:11.5px;color:var(--ink3);margin-top:12px;text-align:center;}
+.impstep{font-size:14px;line-height:1.7;color:#333;padding-left:4px;}
+.impstep b{color:var(--green-d);}
+.impprog{font-size:13.5px;color:var(--ink2);margin:8px 0;min-height:18px;}
 </style>
 </head>
 <body>
@@ -357,6 +372,14 @@ body{background-image:none;}
       <div class="bmibar"><div class="bmimark" id="bmiMark" style="left:0%"></div></div>
       <div class="bmicat" id="bmiCat">填上身高体重看结果</div>
     </div>
+    <div class="scard" id="actCard" style="display:none">
+      <div class="ch"><span class="chl"><span class="chip" style="background:var(--cyan)">🏃</span>今日活动 <span class="sub">来自健康/手表</span></span></div>
+      <div class="actgrid">
+        <div class="actile"><div class="av" id="actSteps">—</div><div class="al">步数</div></div>
+        <div class="actile"><div class="av" id="actEnergy">—</div><div class="al">活动消耗 千卡</div></div>
+      </div>
+      <div class="actsrc" id="actSrc"></div>
+    </div>
     <div class="scard">
       <div class="ch"><span class="chl"><span class="chip" style="background:var(--water)">💧</span>今日喝水 <span class="sub">目标 8 杯 · 2L</span></span></div>
       <div class="water">
@@ -403,10 +426,12 @@ body{background-image:none;}
       <div class="field" id="meKey"><label>识别大脑 (Gemini Key)</label><div class="ctrl"><span id="meKeyState" style="font-size:13px;color:var(--ink3)">未连接</span><span class="ar">›</span></div></div>
     </div>
     <div class="scard melist">
-      <div class="ch"><span class="chl"><span class="chip" style="background:var(--ink3)">🗂️</span>数据</span></div>
+      <div class="ch"><span class="chl"><span class="chip" style="background:var(--cyan)">⌚️</span>数据</span></div>
+      <div class="field" id="meImport"><label>导入 Apple 健康/手表数据</label><span class="ar">›</span></div>
       <div class="field" id="meExport"><label>导出我的数据</label><span class="ar">›</span></div>
       <div class="field" id="meClear"><label style="color:var(--red)">清空所有记录</label><span class="ar">›</span></div>
     </div>
+    <input type="file" id="healthFile" accept=".xml,text/xml" style="display:none">
     <div class="scard">
       <div class="ch"><span class="chl"><span class="chip" style="background:var(--blue)">ℹ️</span>关于</span></div>
       <p style="font-size:14px;color:var(--ink2);line-height:1.7;margin:0">所有数据只存在你手机本地，不上传任何服务器。<br>拍照识别用 Google Gemini 免费额度，钥匙也只存本机。<br><br><b>鲜知 Fresh</b> · 把"会挑、会吃、会管"装进一个网页。</p>
@@ -437,6 +462,24 @@ body{background-image:none;}
     <input id="keyInput" type="text" placeholder="粘贴 Gemini API key（AIza...）" autocomplete="off" autocapitalize="off" spellcheck="false">
     <button class="save" id="saveKey">保存并连接</button>
     <button class="ghost" id="closeKey">稍后再说</button>
+  </div>
+</div>
+
+<!-- 导入健康数据弹层 -->
+<div class="sheet-mask" id="impSheet">
+  <div class="sheet">
+    <div class="grip"></div>
+    <h3>导入 Apple 健康 / 手表数据</h3>
+    <p>网页无法直连健康App，但能读取你<b>导出的健康数据文件</b>。会自动导入：体重(含趋势)、身高、今日步数、喝水、活动消耗。<b>全程只在你手机本地解析，不上传。</b></p>
+    <div class="impstep">
+      1️⃣ 打开 iPhone <b>健康</b> App → 右上角<b>头像</b><br>
+      2️⃣ 拉到底 → <b>导出所有健康数据</b>（生成一个 zip，需等一会）<br>
+      3️⃣ 把 zip <b>解压</b>，里面有个 <b>export.xml</b><br>
+      4️⃣ 回这里点下面按钮，选中那个 export.xml
+    </div>
+    <div class="impprog" id="impProg"></div>
+    <button class="save" id="pickHealthFile">选择 export.xml</button>
+    <button class="ghost" id="closeImp">关闭</button>
   </div>
 </div>
 
@@ -738,7 +781,7 @@ function syncProfileInputs(){
 }
 function renderMe(){ syncProfileInputs(); refreshKeyState(); }
 function renderHealth(){
-  computeHealth(); renderWeightChart(); renderWater(); applyReminder();
+  computeHealth(); renderWeightChart(); renderWater(); applyReminder(); renderActivity();
 }
 function computeHealth(){
   const p=getProfile();
@@ -791,7 +834,7 @@ function renderWater(){
   const c=getWater();
   $("waterCups").textContent=c; $("waterMl").textContent=c*250;
   const target=8; let dots='';
-  for(let i=0;i<Math.max(target,c);i++) dots+=`<div class="dot ${i<c?'full':''}">${i<c?'💧':''}</div>`;
+  for(let i=0;i<Math.max(target,c);i++) dots+=`<div class="dot ${i<c?'full':''}"></div>`;
   $("waterDots").innerHTML=dots;
 }
 $("waterPlus").onclick=()=>{ setWater(getWater()+1); markDrink(); if(getWater()===8) toast("达标啦 💧 2L 喝够了"); };
@@ -846,9 +889,88 @@ $("meExport").onclick=()=>{
 $("meClear").onclick=()=>{
   if(!confirm("确定清空所有饮食/体重/喝水记录？(钥匙和身体资料保留)")) return;
   ['fresh_food_log','fresh_weight_log'].forEach(k=>localStorage.removeItem(k));
-  Object.keys(localStorage).filter(k=>k.startsWith('fresh_water_')).forEach(k=>localStorage.removeItem(k));
+  Object.keys(localStorage).filter(k=>k.startsWith('fresh_water_')||k.startsWith('fresh_activity')).forEach(k=>localStorage.removeItem(k));
   toast("已清空记录"); renderNutri();
 };
+
+/* ===== 导入 Apple 健康数据 ===== */
+function openImpSheet(){ $("impProg").textContent=""; $("impSheet").classList.add("show"); }
+function closeImpSheet(){ $("impSheet").classList.remove("show"); }
+$("meImport").onclick=openImpSheet;
+$("closeImp").onclick=closeImpSheet;
+$("impSheet").onclick=e=>{ if(e.target===$("impSheet")) closeImpSheet(); };
+$("pickHealthFile").onclick=()=>$("healthFile").click();
+$("healthFile").onchange=e=>{ if(e.target.files[0]) importHealthXML(e.target.files[0]); };
+
+function importHealthXML(file){
+  const prog=$("impProg");
+  if(/\.zip$/i.test(file.name)){ prog.innerHTML="❌ 这是 zip，请先<b>解压</b>再选里面的 export.xml"; return; }
+  prog.textContent="正在解析… 0 MB";
+  const weights={}, water={}, steps={}, energy={}; let height=null, hDate='';
+  const RE_VAL=/value="([\d.]+)"/, RE_UNIT=/unit="([^"]+)"/, RE_SD=/startDate="(\d{4}-\d{2}-\d{2})/;
+  function line(l){
+    if(l.indexOf('<Record')<0) return;
+    let kind=null;
+    if(l.indexOf('IdentifierBodyMass"')>0) kind='w';
+    else if(l.indexOf('IdentifierHeight"')>0) kind='h';
+    else if(l.indexOf('DietaryWater"')>0) kind='water';
+    else if(l.indexOf('StepCount"')>0) kind='steps';
+    else if(l.indexOf('ActiveEnergyBurned"')>0) kind='energy';
+    else return;
+    const mv=l.match(RE_VAL); if(!mv) return; let v=parseFloat(mv[1]);
+    const md=l.match(RE_SD); const date=md?md[1]:''; if(!date) return;
+    const mu=l.match(RE_UNIT); const unit=mu?mu[1]:'';
+    if(kind==='w'){ if(unit==='lb') v*=0.4536; weights[date]=v; }
+    else if(kind==='h'){ let cm=unit==='cm'?v:(unit==='in'?v*2.54:v*100); if(date>=hDate){hDate=date;height=cm;} }
+    else if(kind==='water'){ let ml=unit==='L'?v*1000:v; water[date]=(water[date]||0)+ml; }
+    else if(kind==='steps'){ steps[date]=(steps[date]||0)+v; }
+    else if(kind==='energy'){ energy[date]=(energy[date]||0)+v; }
+  }
+  const finish=()=>{
+    // 体重 → 趋势 + 档案
+    const wDates=Object.keys(weights).sort();
+    if(wDates.length){
+      let log=getWeights().filter(w=>!(w.date in weights));
+      wDates.forEach(d=>log.push({date:d,kg:Math.round(weights[d]*10)/10}));
+      log.sort((a,b)=>a.date<b.date?-1:1); SS('fresh_weight_log',log.slice(-60));
+      const p=getProfile(); p.weight=Math.round(weights[wDates[wDates.length-1]]*10)/10; if(height)p.height=Math.round(height); SS('fresh_profile',p);
+    } else if(height){ const p=getProfile(); p.height=Math.round(height); SS('fresh_profile',p); }
+    // 活动(步数/能量) 存近30天
+    const act=LS('fresh_activity',{});
+    Object.keys(steps).forEach(d=>{ act[d]=act[d]||{}; act[d].steps=Math.round(steps[d]); });
+    Object.keys(energy).forEach(d=>{ act[d]=act[d]||{}; act[d].energy=Math.round(energy[d]); });
+    const keep=Object.keys(act).sort().slice(-30); const act2={}; keep.forEach(d=>act2[d]=act[d]); SS('fresh_activity',act2);
+    // 今日喝水
+    if(water[today()]) SS('fresh_water_'+today(), Math.round(water[today()]/250));
+    const tAct=act2[today()]||{};
+    prog.innerHTML=`✅ 导入完成<br>体重 ${wDates.length} 条${height?' · 身高 '+Math.round(height)+'cm':''}${tAct.steps?' · 今日 '+tAct.steps+' 步':''}${tAct.energy?' · 活动 '+tAct.energy+'千卡':''}${water[today()]?' · 喝水 '+Math.round(water[today()])+'ml':''}`;
+    toast("健康数据已导入 ✓");
+    syncProfileInputs(); renderActivity(); computeHealth(); renderWeightChart(); renderWater();
+  };
+  // 优先流式(大文件不爆内存)，不支持则退回 text()
+  if(file.stream && window.TextDecoderStream){
+    let buf='', mb=0, read=0;
+    const reader=file.stream().pipeThrough(new TextDecoderStream()).getReader();
+    (function pump(){ reader.read().then(({done,value})=>{
+      if(done){ if(buf)line(buf); finish(); return; }
+      buf+=value; read+=value.length; if(read-mb>2e6){ mb=read; prog.textContent="正在解析… "+Math.round(read/1e6)+" MB"; }
+      let i; while((i=buf.indexOf('\n'))>=0){ line(buf.slice(0,i)); buf=buf.slice(i+1); }
+      pump();
+    }).catch(err=>{ prog.innerHTML="❌ 解析失败: "+esc(err.message); }); })();
+  } else {
+    file.text().then(txt=>{ txt.split('\n').forEach(line); finish(); }).catch(err=>{ prog.innerHTML="❌ 读取失败: "+esc(err.message); });
+  }
+}
+
+function renderActivity(){
+  const act=LS('fresh_activity',{})[today()];
+  if(act && (act.steps||act.energy)){
+    $("actCard").style.display="block";
+    $("actSteps").innerHTML = act.steps!=null ? act.steps.toLocaleString() : "—";
+    $("actEnergy").innerHTML = act.energy!=null ? act.energy : "—";
+    $("actSrc").textContent="数据来自 Apple 健康导入";
+  } else { $("actCard").style.display="none"; }
+}
 
 /* ===== 工具 ===== */
 function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
