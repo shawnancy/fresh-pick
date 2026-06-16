@@ -126,6 +126,8 @@ input[type=file]{display:none;}
 .calside .k{font-size:13px;color:var(--ink2);margin-bottom:2px;}
 .calside .v{font-size:17px;font-weight:700;margin-bottom:10px;}
 .calside .v.warn{color:var(--red);}
+.calbreak{font-size:11.5px;color:var(--ink3);margin:-6px 0 11px;line-height:1.45;}
+.calbreak b{color:var(--green-d);font-weight:700;}
 .quickadd{display:flex;gap:8px;margin-top:6px;}
 .quickadd input{flex:1;min-width:0;border:.5px solid var(--line);border-radius:13px;padding:12px;font-size:15px;background:#fff;font-family:inherit;}
 .quickadd input.kc{flex:0 0 78px;}
@@ -333,6 +335,7 @@ body{background-image:none;}
         <div class="calring" id="calRing"><div class="in"><b id="calNow">0</b><span id="calGoal">/ 2000</span></div></div>
         <div class="calside">
           <div class="k">还可以吃</div><div class="v" id="calLeft">2000 千卡</div>
+          <div class="calbreak" id="calBreak"></div>
           <button class="minibtn dark" id="mealShotBtn" style="width:100%;padding:11px">📷 拍菜自动记一笔</button>
         </div>
       </div>
@@ -668,16 +671,20 @@ function renderNutri(){
   const foods=getFoods().filter(f=>f.date===today()).sort((a,b)=>b.ts-a.ts);
   const total=foods.reduce((s,f)=>s+f.kcal,0);
   const goal=getGoal();
-  const pct=Math.min(100,Math.round(total/goal*100));
-  const over=total>goal;
+  const act=LS('fresh_activity',{})[today()];
+  const burn=(act&&act.energy)?act.energy:0;   // 手表活动消耗 → 加进今日预算
+  const budget=goal+burn;
+  const pct=Math.min(100,Math.round(total/budget*100));
+  const over=total>budget;
   const ring=$("calRing");
   ring.style.setProperty('--p',pct+'%');
   ring.style.setProperty('--rc',over?cssv('--red'):cssv('--green'));
   $("calNow").textContent=total;
-  $("calGoal").textContent="/ "+goal;
-  const left=goal-total;
+  $("calGoal").textContent="/ "+budget;
+  const left=budget-total;
   $("calLeft").textContent=(left>=0?left:('超 '+(-left)))+" 千卡";
   $("calLeft").className="v"+(over?" warn":"");
+  $("calBreak").innerHTML = burn>0 ? `目标 ${goal} + 🏃 活动 <b>${burn}</b> 千卡` : "";
   // 清单
   $("foodCount").textContent=foods.length?("· "+foods.length+" 项"):"";
   const fl=$("foodList");
@@ -947,7 +954,7 @@ function importHealthXML(file){
     const tAct=act2[today()]||{};
     prog.innerHTML=`✅ 导入完成<br>体重 ${wDates.length} 条${height?' · 身高 '+Math.round(height)+'cm':''}${tAct.steps?' · 今日 '+tAct.steps+' 步':''}${tAct.energy?' · 活动 '+tAct.energy+'千卡':''}${water[today()]?' · 喝水 '+Math.round(water[today()])+'ml':''}`;
     toast("健康数据已导入 ✓");
-    syncProfileInputs(); renderActivity(); computeHealth(); renderWeightChart(); renderWater();
+    syncProfileInputs(); renderActivity(); computeHealth(); renderWeightChart(); renderWater(); renderNutri();
   };
   // 优先流式(大文件不爆内存)，不支持则退回 text()
   if(file.stream && window.TextDecoderStream){
